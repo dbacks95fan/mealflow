@@ -1,10 +1,9 @@
-// ABOUTME: Opens the SQLite database via the node:sqlite builtin, runs the
-// ABOUTME: legacy-filename shim and pending migrations, and exports the handle.
+// ABOUTME: Opens the SQLite database via the node:sqlite builtin, runs
+// ABOUTME: pending migrations, and exports the handle.
 import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import type { DatabaseSync as DatabaseSyncType } from "node:sqlite";
 import { config } from "../config.js";
-import { migrateLegacyDatabase } from "./migrate-legacy-db.js";
 import { runMigrations } from "./migrate.js";
 
 const { DatabaseSync } = process.getBuiltinModule("node:sqlite") as {
@@ -14,7 +13,6 @@ const { DatabaseSync } = process.getBuiltinModule("node:sqlite") as {
 const dbPath = config.sqlitePath;
 if (dbPath !== ":memory:") {
   mkdirSync(dirname(dbPath), { recursive: true });
-  migrateLegacyDatabase(dbPath);
 }
 
 export const db = new DatabaseSync(dbPath);

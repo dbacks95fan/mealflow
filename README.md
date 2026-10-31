@@ -86,15 +86,6 @@ Fry's/Kroger cart integration is inert until `MEALFLOW_SECRET_KEY`, `KROGER_CLIE
    the LAN, so the app never needs to be internet-facing. After this one approval the server
    refreshes tokens and adds to the cart on its own.
 
-### Upgrading from Menu App
-
-The default SQLite filename changed from `menuapp.db` to `mealflow.db`. On first start, the server
-automatically renames a legacy `data/menuapp.db` (and its `-wal`/`-shm`/`-journal` sidecars) to the
-new name when no `mealflow.db` exists yet — no action needed for the default setup. If your
-deployment pins `SQLITE_PATH` to a path ending in `menuapp.db`, either keep that value (it still
-works) or rename the file yourself and update `SQLITE_PATH` while the container is stopped. See
-`docs/decisions/0002-rename-to-mealflow.md`.
-
 ## CI
 
 GitHub Actions (`.github/workflows/ci.yml`) builds and runs server + e2e tests on every push and pull request.

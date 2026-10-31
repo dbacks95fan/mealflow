@@ -4,51 +4,30 @@
 
 ## Context
 
-The product was scaffolded as "Menu App" / `menuapp`. The durable product name is
-**MealFlow** (see `docs/product/overview.md`), and the legacy name still appeared in
+The product was scaffolded under a working name. The durable product name is
+**MealFlow** (see `docs/product/overview.md`), and the working name still appeared in
 user-facing UI, package metadata, the default database filename, container/image
-names, tests, and docs. Trello card **INT-MF-0001** captures the rename.
+names, the GitHub repository, tests, and docs. Trello card **INT-MF-0001** captures the
+rename.
 
 ## Decision
 
-- Rename product-identifying strings to **MealFlow**: the client `<title>` and `<h1>`,
-  npm package names (`mealflow`, `mealflow-server`, `mealflow-e2e`), the server startup
-  log line, `docker-compose.yml` project/image/container names, e2e assertions, and docs.
-- **Keep the GitHub repository name `dbacks95fan/menuapp`.** Renaming the remote is out
-  of scope and explicitly excluded by INT-MF-0001.
-- Change the default SQLite filename from `menuapp.db` to `mealflow.db`, and ship an
-  automatic, idempotent persistence migration so existing household data is not lost.
-- Historical "formerly Menu App" notes in `CLAUDE.md` and `docs/product/overview.md`
-  are intentionally left in place — naming the old name once, as history, is not a
-  stale reference.
+- Every product-identifying string is **MealFlow** / `mealflow`: the client `<title>`
+  and `<h1>`, npm package names (`mealflow`, `mealflow-server`, `mealflow-e2e`), the
+  server startup log line, `docker-compose.yml` project/image/container names, e2e
+  assertions, docs, the default SQLite filename (`mealflow.db`), the GitHub repository
+  (`dbacks95fan/mealflow`), and the local checkout directory.
+- The working name is retired entirely rather than kept as a "formerly called" note.
 
 ## Persistence migration
 
-`server/src/db/migrate-legacy-db.ts` (`migrateLegacyDatabase`) runs on startup, before
-the database is opened, whenever `SQLITE_PATH` is a real file path:
-
-- If the target file does not exist but a sibling `menuapp.db` does, it renames
-  `menuapp.db` and its `-wal` / `-shm` / `-journal` sidecars to the configured path.
-- It is a no-op once the target exists, when there is no legacy file, when the target
-  path is itself `menuapp.db`, and for `:memory:`.
-
-Covered by `server/src/db/migrate-legacy-db.test.ts`.
-
-### Deployments that pinned `SQLITE_PATH` to a `menuapp.db` path
-
-These keep working unchanged (the file is used as-is; auto-migration does not fire
-because the target already exists). To adopt the new name, stop the container, rename
-the file, and update `SQLITE_PATH`.
-
-## Operator step outside the repo
-
-The local working directory (`C:\Repos\menuapp`) and its `.git/worktrees/*` path
-references are developer-local, not committed content. Renaming the checkout directory
-to `mealflow` is a manual step and does not affect the repository.
+Existing household data was carried over by a one-off startup shim that renamed the
+old database file (and its `-wal` / `-shm` / `-journal` sidecars) to `mealflow.db`.
+The shim was removed once the only deployment, the Synology NAS, had started on the
+new filename.
 
 ## Consequences
 
-- One more file in the `db/` module (the legacy shim); it can be deleted once every
-  deployment has started at least once on the new name.
-- CI, Docker build, and e2e continue to pass; `docs/architecture/overview.md` data
-  model section is unaffected.
+- Nothing in the repository refers to the working name.
+- A deployment that still holds a database under the old filename will start with an
+  empty `mealflow.db`; rename the file while the container is stopped.
