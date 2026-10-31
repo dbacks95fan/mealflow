@@ -8,8 +8,9 @@ replacement for it.
 
 MealFlow (formerly "Menu App"): a household meal-planning app. Manage recipes,
 select meals, calculate needed ingredients, and eventually integrate with
-Fry's/Kroger shopping. See `docs/product/overview.md` for the product picture and
-`docs/architecture/overview.md` for how it's built.
+Fry's/Kroger shopping. See `docs/product/overview.md` for the product picture,
+`CONSTITUTION.md` for durable product rules, and `ARCHITECTURE.md` for the
+current system shape and links to detailed design records.
 
 ## Non-negotiable constraints (do not change without escalation)
 
