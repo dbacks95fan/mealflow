@@ -1,6 +1,6 @@
 # Product Overview — MealFlow
 
-A locally-hosted household meal-planning application, formerly called "Menu App".
+A locally-hosted household meal-planning application.
 
 ## Who it's for
 

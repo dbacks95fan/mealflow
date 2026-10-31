@@ -8,8 +8,3 @@ test("home page loads as MealFlow", async ({ page }) => {
   await expect(page).toHaveTitle("MealFlow");
   await expect(page.getByRole("heading", { level: 1, name: "MealFlow" })).toBeVisible();
 });
-
-test("no legacy 'Menu App' name remains in the UI", async ({ page }) => {
-  await page.goto("/");
-  await expect(page.getByText(/menu ?app/i)).toHaveCount(0);
-});

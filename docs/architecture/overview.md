@@ -47,10 +47,6 @@ Schema changes are ordered SQL files under `server/src/db/migrations/`
 copies the `.sql` files into `dist/` (`server/scripts/copy-migrations.mjs`). Add
 a new numbered file; never edit an applied one.
 
-`server/src/db/migrate-legacy-db.ts` is a separate one-off startup shim that
-renames a pre-MealFlow `menuapp.db` to the configured path (see
-`docs/decisions/0002-rename-to-mealflow.md`).
-
 ## Cross-cutting server middleware
 
 `server/src/app.ts` wires, in order: `helmet` (security headers, CSP), optional

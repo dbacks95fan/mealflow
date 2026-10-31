@@ -6,7 +6,7 @@ replacement for it.
 
 ## What this is
 
-MealFlow (formerly "Menu App"): a household meal-planning app. Manage recipes,
+MealFlow: a household meal-planning app. Manage recipes,
 select meals, calculate needed ingredients, and eventually integrate with
 Fry's/Kroger shopping. See `docs/product/overview.md` for the product picture,
 `CONSTITUTION.md` for durable product rules, and `ARCHITECTURE.md` for the
