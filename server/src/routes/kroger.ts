@@ -191,7 +191,9 @@ krogerRouter.get("/api/frys/match", async (_req, res, next) => {
   }
 
   try {
-    const token = await getUserAccessToken();
+    // Product search / lookup uses the app's client-credentials token
+    // (product.compact scope) — NOT the user's cart token, which lacks it.
+    const productToken = await getProductToken();
     const locationId = row.frys_location_id;
     const maps = new Map(
       (db.prepare("SELECT * FROM ingredient_product_map").all() as unknown as MapRow[]).map((m) => [
@@ -208,7 +210,10 @@ krogerRouter.get("/api/frys/match", async (_req, res, next) => {
 
       if (saved) {
         chosen =
-          (await getProductById(saved.kroger_product_id, locationId, token).catch(() => null)) ??
+          (await getProductById(saved.kroger_product_id, locationId, productToken).catch((err) => {
+            logger.warn({ err, productId: saved.kroger_product_id }, "Fry's product lookup failed");
+            return null;
+          })) ??
           {
             productId: saved.kroger_product_id,
             upc: saved.upc ?? saved.kroger_product_id,
@@ -220,7 +225,10 @@ krogerRouter.get("/api/frys/match", async (_req, res, next) => {
           };
         options = [chosen];
       } else {
-        options = await searchProducts(line.name, locationId, token).catch(() => []);
+        options = await searchProducts(line.name, locationId, productToken).catch((err) => {
+          logger.warn({ err, term: line.name }, "Fry's product search failed");
+          return [];
+        });
         chosen = options[0] ?? null;
       }
 
