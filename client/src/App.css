@@ -1,35 +1,41 @@
-/* ABOUTME: Component styles for MealFlow, built on the tokens in index.css. */
+/* ABOUTME: Shared component styles for MealFlow, built only on the tokens in
+   index.css (INT-MF-0002). Each interactive component defines default, hover,
+   focus (global :focus-visible), selected, and disabled states. */
 
 .app-shell {
   max-width: 760px;
   margin: 0 auto;
-  padding: 1.25rem 1rem 3rem;
+  padding: var(--mf-space-5) var(--mf-space-4) 3rem;
 }
 
 .app-shell > header {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
+  gap: var(--mf-space-3);
+  margin-bottom: var(--mf-space-6);
 }
 
 .app-shell > header h1 {
-  color: var(--mf-primary);
+  color: var(--mf-primary-text);
 }
 
+/* Navigation */
 .nav-bar {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem;
+  gap: var(--mf-space-1);
   border-bottom: 3px solid var(--mf-sand);
-  padding-bottom: 0.5rem;
+  padding-bottom: var(--mf-space-2);
 }
 
 .nav-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--mf-touch);
   text-decoration: none;
   color: var(--mf-muted);
   padding: 0.35rem 0.6rem;
-  border-radius: 6px;
+  border-radius: var(--mf-radius-sm);
   font-weight: 600;
 }
 
@@ -38,15 +44,17 @@
   background: var(--mf-surface-2);
 }
 
-.nav-link.active {
+.nav-link.active,
+.nav-link[aria-current="page"] {
   color: var(--mf-on-primary);
   background: var(--mf-primary);
 }
 
+/* Layout helpers */
 .stack {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--mf-space-4);
 }
 
 .toolbar {
@@ -60,13 +68,20 @@
   flex: 1 1 12rem;
 }
 
-/* Buttons and button-styled links */
+/* Buttons and button-styled links.
+   Secondary is the default; primary is .button or type=submit;
+   danger is .danger; selected is aria-pressed=true. */
 button,
 .button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mf-space-2);
+  min-height: var(--mf-touch);
+  min-width: var(--mf-touch);
   padding: 0.45rem 0.9rem;
   border: 1px solid var(--mf-border);
-  border-radius: 8px;
+  border-radius: var(--mf-radius-sm);
   background: var(--mf-surface);
   color: var(--mf-text);
   text-decoration: none;
@@ -88,28 +103,31 @@ button[type="submit"],
 
 button[type="submit"]:hover,
 .button:hover {
-  background: var(--mf-red-strong);
-}
-
-button:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-button.danger,
-button[aria-pressed="true"] {
-  border-color: var(--mf-primary);
+  background: var(--mf-primary-hover);
+  border-color: var(--mf-primary-hover);
 }
 
 button.danger {
-  color: var(--mf-primary);
+  border-color: var(--mf-primary-text);
+  color: var(--mf-primary-text);
   background: var(--mf-surface);
 }
 
+button.danger:hover {
+  background: var(--mf-error-bg);
+}
+
 button[aria-pressed="true"] {
-  background: var(--mf-teal-ink);
-  border-color: var(--mf-teal-ink);
-  color: #fff;
+  background: var(--mf-selected);
+  border-color: var(--mf-selected);
+  color: var(--mf-on-selected);
+}
+
+button:disabled,
+button:disabled:hover,
+.button[aria-disabled="true"] {
+  opacity: var(--mf-disabled-opacity);
+  cursor: not-allowed;
 }
 
 /* Cards / lists */
@@ -120,7 +138,7 @@ button[aria-pressed="true"] {
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--mf-space-3);
 }
 
 .ingredient-list {
@@ -130,13 +148,13 @@ button[aria-pressed="true"] {
 .card {
   border: 1px solid var(--mf-border);
   border-radius: var(--mf-radius);
-  padding: 1rem;
+  padding: var(--mf-space-4);
   background: var(--mf-surface);
   box-shadow: var(--mf-shadow);
 }
 
 .card h3 {
-  margin: 0 0 0.25rem;
+  margin: 0 0 var(--mf-space-1);
 }
 
 .card a {
@@ -145,11 +163,15 @@ button[aria-pressed="true"] {
 }
 
 .card a:hover h3 {
-  color: var(--mf-primary);
+  color: var(--mf-primary-text);
+}
+
+.card.selected {
+  border: 2px solid var(--mf-selected);
 }
 
 .card.muted-card {
-  opacity: 0.55;
+  opacity: var(--mf-disabled-opacity);
 }
 
 .muted {
@@ -157,17 +179,18 @@ button[aria-pressed="true"] {
   font-size: 0.9rem;
 }
 
+/* Tags */
 .tag-row {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin-top: 0.5rem;
+  margin-top: var(--mf-space-2);
 }
 
 .tag {
-  background: var(--mf-sand);
-  color: var(--mf-ink);
-  border-radius: 999px;
+  background: var(--mf-tag-bg);
+  color: var(--mf-tag-text);
+  border-radius: var(--mf-radius-pill);
   padding: 0.1rem 0.6rem;
   font-size: 0.8rem;
   font-weight: 600;
@@ -176,12 +199,12 @@ button[aria-pressed="true"] {
 .empty-state {
   border: 2px dashed var(--mf-border);
   border-radius: var(--mf-radius);
-  padding: 2rem 1.5rem;
+  padding: var(--mf-space-8) var(--mf-space-6);
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: var(--mf-space-4);
   background: var(--mf-surface);
 }
 
@@ -189,7 +212,7 @@ button[aria-pressed="true"] {
 form label {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--mf-space-1);
   max-width: 28rem;
   font-weight: 600;
 }
@@ -203,7 +226,7 @@ form label select {
 .inline-field {
   flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--mf-space-2);
   max-width: none;
   font-weight: 400;
 }
@@ -226,8 +249,8 @@ legend {
 .ingredient-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: var(--mf-space-2);
+  margin-bottom: var(--mf-space-2);
 }
 
 .ingredient-row input {
@@ -235,27 +258,114 @@ legend {
   min-width: 0;
 }
 
-/* Notices / alerts */
+/* Notices / alerts.
+   .notice = information; .notice.warn = something went wrong (partial or
+   failed result); .notice.review = needs the household's attention. */
 [role="alert"] {
-  color: var(--mf-primary);
+  color: var(--mf-error-text);
   font-weight: 600;
 }
 
 .notice {
-  border: 1px solid var(--mf-teal);
-  background: var(--mf-surface-2);
-  background: color-mix(in srgb, var(--mf-teal) 12%, var(--mf-surface));
+  border: 1px solid var(--mf-info-border);
+  background: var(--mf-info-bg);
+  color: var(--mf-info-text);
   border-radius: var(--mf-radius);
-  padding: 0.75rem 1rem;
+  padding: var(--mf-space-3) var(--mf-space-4);
 }
 
 .notice.warn {
-  border-color: var(--mf-primary);
-  background: var(--mf-surface-2);
-  background: color-mix(in srgb, var(--mf-primary) 10%, var(--mf-surface));
+  border-color: var(--mf-error-border);
+  background: var(--mf-error-bg);
+  color: var(--mf-text);
+}
+
+.notice.review {
+  border-color: var(--mf-warn-border);
+  background: var(--mf-warn-bg);
+  color: var(--mf-warn-text);
 }
 
 .notice ul {
-  margin: 0.5rem 0 0;
+  margin: var(--mf-space-2) 0 0;
   padding-left: 1.2rem;
+}
+
+/* Quantity stepper (see components/QuantityStepper.tsx) */
+.stepper {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--mf-border);
+  border-radius: var(--mf-radius-lg);
+  background: var(--mf-surface-2);
+}
+
+.stepper button {
+  border: 0;
+  background: transparent;
+  color: var(--mf-text);
+  border-radius: var(--mf-radius-lg);
+  padding: 0;
+}
+
+.stepper button:hover:not(:disabled) {
+  background: var(--mf-surface);
+}
+
+.stepper output {
+  min-width: 2ch;
+  padding: 0 var(--mf-space-1);
+  text-align: center;
+  font-weight: 700;
+  font-size: var(--mf-text-lg);
+}
+
+/* Switch (see components/Switch.tsx) */
+button.switch {
+  gap: var(--mf-space-3);
+  padding: 0 var(--mf-space-1);
+  border: 0;
+  background: transparent;
+  color: var(--mf-text);
+}
+
+button.switch:hover {
+  background: transparent;
+}
+
+.switch-track {
+  position: relative;
+  display: inline-block;
+  width: 46px;
+  height: 28px;
+  border-radius: var(--mf-radius-pill);
+  background: var(--mf-control-off);
+  transition: background 120ms ease;
+}
+
+.switch-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform 120ms ease;
+}
+
+button.switch[aria-checked="true"] .switch-track {
+  background: var(--mf-control-on);
+}
+
+button.switch[aria-checked="true"] .switch-thumb {
+  transform: translateX(18px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .switch-track,
+  .switch-thumb {
+    transition: none;
+  }
 }

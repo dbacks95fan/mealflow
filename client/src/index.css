@@ -1,7 +1,10 @@
-/* ABOUTME: Global tokens + base styles. Palette follows the Arizona
-   Diamondbacks: Sedona Red, Sonoran Sand, black, teal. Light + dark. */
+/* ABOUTME: Global design tokens + base styles (INT-MF-0002). Palette follows the
+   Arizona Diamondbacks: Sedona Red, Sonoran Sand, black, teal. Light + dark.
+   Every color pair used for text is checked against WCAG 2.x AA by
+   src/design/tokens.test.ts, so add new pairs there when you add tokens. */
 
 :root {
+  /* Brand palette */
   --mf-red: #a71930;
   --mf-red-strong: #7d1223;
   --mf-sand: #e3d4ad;
@@ -10,6 +13,7 @@
   --mf-teal-ink: #0b6b73;
   --mf-ink: #1a1a1a;
 
+  /* Surfaces and text */
   --mf-bg: var(--mf-sand-soft);
   --mf-surface: #ffffff;
   --mf-surface-2: #fbf7ec;
@@ -17,19 +21,63 @@
   --mf-muted: #5c5750;
   --mf-border: #d9cba6;
 
+  /* Roles */
   --mf-primary: var(--mf-red);
+  --mf-primary-hover: var(--mf-red-strong);
   --mf-on-primary: #ffffff;
+  --mf-primary-text: var(--mf-red); /* red used as text on a surface */
   --mf-accent: var(--mf-teal-ink);
-  --mf-focus: var(--mf-teal);
+  --mf-selected: var(--mf-teal-ink);
+  --mf-on-selected: #ffffff;
+  --mf-focus: var(--mf-teal-ink); /* bright teal is only 1.7:1 on sand */
   --mf-danger: var(--mf-red);
+  --mf-tag-bg: var(--mf-sand);
+  --mf-tag-text: var(--mf-ink);
+  --mf-control-off: #7f7666; /* switch track, off (3:1 non-text) */
+  --mf-control-on: var(--mf-teal-ink); /* switch track, on */
 
+  /* Status notices */
+  --mf-info-border: var(--mf-teal);
+  --mf-info-bg: #e6f8f9;
+  --mf-info-text: var(--mf-ink);
+  --mf-warn-border: #c98a12;
+  --mf-warn-bg: #fdf0d5;
+  --mf-warn-text: #6b4200;
+  --mf-error-border: var(--mf-red);
+  --mf-error-bg: #f6e3e2;
+  --mf-error-text: var(--mf-red-strong);
+
+  /* Type scale (system fonts; bundling a display face is an open decision) */
+  --mf-sans: system-ui, "Segoe UI", Roboto, sans-serif;
+  --mf-text-xs: 0.75rem;
+  --mf-text-sm: 0.875rem;
+  --mf-text-md: 1rem;
+  --mf-text-lg: 1.125rem;
+  --mf-text-xl: 1.3rem;
+  --mf-text-2xl: 1.6rem;
+  --mf-leading: 1.5;
+  --mf-leading-tight: 1.2;
+
+  /* Spacing scale (4px steps) */
+  --mf-space-1: 0.25rem;
+  --mf-space-2: 0.5rem;
+  --mf-space-3: 0.75rem;
+  --mf-space-4: 1rem;
+  --mf-space-5: 1.25rem;
+  --mf-space-6: 1.5rem;
+  --mf-space-8: 2rem;
+
+  /* Shape and size */
+  --mf-radius-sm: 8px;
   --mf-radius: 10px;
+  --mf-radius-lg: 14px;
+  --mf-radius-pill: 999px;
+  --mf-touch: 44px; /* WCAG 2.5.5 target size */
+  --mf-disabled-opacity: 0.55;
   --mf-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 6px 16px rgba(0, 0, 0, 0.06);
 
-  --mf-sans: system-ui, "Segoe UI", Roboto, sans-serif;
-
   color-scheme: light dark;
-  font: 16px/1.5 var(--mf-sans);
+  font: var(--mf-text-md) / var(--mf-leading) var(--mf-sans);
   color: var(--mf-text);
   background: var(--mf-bg);
   -webkit-font-smoothing: antialiased;
@@ -47,6 +95,19 @@
     --mf-accent: #55dce5;
     --mf-focus: #55dce5;
     --mf-sand: #7a6a45;
+    --mf-primary-text: #f0707f;
+    --mf-tag-bg: #b8a678;
+    --mf-tag-text: var(--mf-ink);
+    --mf-control-off: #8a8a8a;
+    --mf-control-on: #55dce5;
+    --mf-info-bg: #13292b;
+    --mf-info-text: #f1efe9;
+    --mf-warn-border: #c98a12;
+    --mf-warn-bg: #2e2614;
+    --mf-warn-text: #ffd27a;
+    --mf-error-border: #f0707f;
+    --mf-error-bg: #3a1d22;
+    --mf-error-text: #ffb3bd;
     --mf-shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 6px 16px rgba(0, 0, 0, 0.35);
   }
 }
@@ -67,18 +128,18 @@ h1,
 h2,
 h3 {
   font-weight: 700;
-  line-height: 1.2;
+  line-height: var(--mf-leading-tight);
   color: var(--mf-text);
 }
 
 h1 {
-  font-size: 1.6rem;
+  font-size: var(--mf-text-2xl);
   letter-spacing: -0.01em;
   margin: 0;
 }
 
 h2 {
-  font-size: 1.3rem;
+  font-size: var(--mf-text-xl);
   margin: 0;
 }
 
@@ -108,12 +169,29 @@ textarea,
 select {
   padding: 0.45rem 0.55rem;
   border: 1px solid var(--mf-border);
-  border-radius: 8px;
+  border-radius: var(--mf-radius-sm);
   background: var(--mf-surface);
   max-width: 100%;
 }
 
-:where(a, button, input, textarea, select):focus-visible {
+input:not([type="checkbox"], [type="radio"]),
+select {
+  min-height: var(--mf-touch);
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--mf-selected);
+}
+
+:where(input, textarea, select):disabled {
+  opacity: var(--mf-disabled-opacity);
+  cursor: not-allowed;
+}
+
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
   outline: 3px solid var(--mf-focus);
   outline-offset: 1px;
 }
