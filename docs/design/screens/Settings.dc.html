@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MealFlow settings</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0b6b73}a:hover{color:#7d1223}
+input::placeholder{color:#7a7368}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #f7f1e2; color: #1a1a1a; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <header style="padding: 22px 20px 0">
+    <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 34px; line-height: 1">Settings</h1>
+  </header>
+
+  <div style="padding: 16px 20px 100px; display: flex; flex-direction: column; gap: 14px">
+
+    <section aria-labelledby="hh" style="background: #ffffff; border: 1px solid #e6dcc0; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+      <h2 id="hh" style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #5c5750">Household</h2>
+      <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 700">
+        Household name
+        <span style="display: flex; gap: 8px">
+          <input defaultValue="[Household name]" style="flex: 1; min-width: 0; height: 46px; padding: 0 12px; border: 1px solid #d9cba6; border-radius: 10px; font: inherit; font-size: 16px; font-weight: 400; color: #1a1a1a">
+          <button type="button" style="height: 46px; padding: 0 16px; border-radius: 10px; border: 0; background: #a71930; color: #ffffff; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer">Save</button>
+        </span>
+      </label>
+    </section>
+
+    <section aria-labelledby="fa" style="background: #ffffff; border: 1px solid #e6dcc0; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+      <h2 id="fa" style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #5c5750">Fry’s account</h2>
+      <span style="display: flex; align-items: center; gap: 12px">
+        <span style="width: 40px; height: 40px; flex: none; border-radius: 20px; background: #dff4f5; color: #0b6b73; display: flex; align-items: center; justify-content: center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>
+        </span>
+        <span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 15px; font-weight: 700">Connected</span>
+          <span style="font-size: 13px; color: #5c5750">Since [connection date]</span>
+        </span>
+        <button type="button" style="height: 40px; padding: 0 12px; border-radius: 10px; border: 1px solid #a71930; background: #ffffff; color: #a71930; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer">Disconnect</button>
+      </span>
+      <span style="font-size: 12px; color: #5c5750; line-height: 1.4">Your Fry’s password is never seen or stored by MealFlow.</span>
+    </section>
+
+    <section aria-labelledby="hs" style="background: #ffffff; border: 1px solid #e6dcc0; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+      <h2 id="hs" style="margin: 0; font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #5c5750">Home store</h2>
+      <span style="display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 700">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a71930" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        [Your home store]
+      </span>
+      <form style="display: flex; gap: 8px">
+        <label style="flex: 1; min-width: 0; display: flex">
+          <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">ZIP code</span>
+          <input inputmode="numeric" placeholder="ZIP code" defaultValue="[ZIP]" style="flex: 1; min-width: 0; height: 46px; padding: 0 12px; border: 1px solid #d9cba6; border-radius: 10px; font: inherit; font-size: 16px; color: #1a1a1a">
+        </label>
+        <button type="button" style="height: 46px; padding: 0 14px; border-radius: 10px; border: 1px solid #d9cba6; background: #fbf7ec; color: #1a1a1a; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer">Find stores</button>
+      </form>
+      <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+        <li style="padding: 10px 10px 10px 12px; border-radius: 12px; border: 2px solid #0b6b73; background: #eef8f8; display: flex; align-items: center; gap: 10px">
+          <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 14px; font-weight: 700">[Store name]</span>
+            <span style="font-size: 12px; color: #5c5750">[Store address]</span>
+          </span>
+          <span style="height: 36px; padding: 0 10px; border-radius: 9px; background: #0b6b73; color: #ffffff; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>
+            Home store
+          </span>
+        </li>
+        <li style="padding: 10px 10px 10px 12px; border-radius: 12px; border: 1px solid #e6dcc0; display: flex; align-items: center; gap: 10px">
+          <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 14px; font-weight: 700">[Store name]</span>
+            <span style="font-size: 12px; color: #5c5750">[Store address]</span>
+          </span>
+          <button type="button" style="height: 40px; padding: 0 12px; border-radius: 9px; border: 1px solid #d9cba6; background: #ffffff; color: #1a1a1a; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer">Use this store</button>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <nav aria-label="Primary" style="position: absolute; left: 0; right: 0; bottom: 0; height: 78px; background: #ffffff; border-top: 1px solid #d9cba6; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding-bottom: 10px; box-sizing: border-box">
+    <a href="Main.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>
+      Recipes
+    </a>
+    <a href="ThisWeek.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+      This Week
+    </a>
+    <a href="Groceries.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>
+      Groceries
+    </a>
+    <a href="Settings.dc.html" aria-current="page" style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #a71930; font-size: 12px; font-weight: 700">
+      <span style="position: absolute; top: 0; width: 36px; height: 3px; border-radius: 0 0 3px 3px; background: #a71930"></span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+      Settings
+    </a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

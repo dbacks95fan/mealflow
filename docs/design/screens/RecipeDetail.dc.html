@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MealFlow recipe detail</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0b6b73}a:hover{color:#7d1223}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #f7f1e2; color: #1a1a1a; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <header style="padding: 16px 12px 0; display: flex; align-items: center; justify-content: space-between; gap: 8px">
+    <a href="Main.dc.html" style="height: 44px; padding: 0 10px 0 4px; display: flex; align-items: center; gap: 2px; text-decoration: none; color: #1a1a1a; font-weight: 600; font-size: 15px">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+      Recipes
+    </a>
+    <a href="RecipeForm.dc.html" style="height: 44px; padding: 0 14px; border-radius: 11px; border: 1px solid #d9cba6; background: #ffffff; display: flex; align-items: center; gap: 6px; text-decoration: none; color: #1a1a1a; font-weight: 600; font-size: 14px">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>
+      Edit
+    </a>
+  </header>
+
+  <div style="padding: 14px 20px 0; display: flex; flex-direction: column; gap: 10px">
+    <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 34px; line-height: 1.05; color: #1a1a1a">Green Chile Chicken Enchiladas</h1>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px">
+      <span style="background: #e3d4ad; border-radius: 999px; padding: 3px 10px; font-size: 12px; font-weight: 600">dinner</span>
+      <span style="background: #e3d4ad; border-radius: 999px; padding: 3px 10px; font-size: 12px; font-weight: 600">mexican</span>
+    </div>
+  </div>
+
+  <div style="margin: 16px 20px 0; padding: 12px 12px 12px 16px; background: #ffffff; border: 1px solid #e6dcc0; border-radius: 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+    <span style="display: flex; flex-direction: column; gap: 2px">
+      <span style="font-size: 13px; color: #5c5750; font-weight: 600">Scale to</span>
+      <span style="font-size: 17px; font-weight: 700">{{servings}} servings</span>
+      <span style="font-size: 12px; color: #5c5750">Recipe serves 6</span>
+    </span>
+    <span style="display: flex; align-items: center; gap: 6px">
+      <button type="button" onClick="{{dec}}" aria-label="Fewer servings" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid #d9cba6; background: #fbf7ec; color: #1a1a1a; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg>
+      </button>
+      <span style="min-width: 32px; text-align: center; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px">{{servings}}</span>
+      <button type="button" onClick="{{inc}}" aria-label="More servings" style="width: 44px; height: 44px; border-radius: 12px; border: 1px solid #d9cba6; background: #fbf7ec; color: #1a1a1a; display: flex; align-items: center; justify-content: center; cursor: pointer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+    </span>
+  </div>
+
+  <div style="padding: 20px 20px 0; display: flex; align-items: baseline; justify-content: space-between">
+    <h2 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 22px">Ingredients</h2>
+    <span style="font-size: 13px; color: #5c5750">11 items</span>
+  </div>
+  <ul style="list-style: none; margin: 8px 20px 0; padding: 0 16px; background: #ffffff; border: 1px solid #e6dcc0; border-radius: 14px; display: flex; flex-direction: column">
+    <sc-for list="{{ingredients}}" as="i" hint-placeholder-count="8">
+      <li style="display: grid; grid-template-columns: 86px minmax(0, 1fr); gap: 12px; padding: 11px 0; border-bottom: 1px solid #f0e8d4; font-size: 15px">
+        <span style="font-weight: 700; color: #a71930">{{i.amount}}</span>
+        <span>{{i.name}}<span style="color: #5c5750">{{i.note}}</span></span>
+      </li>
+    </sc-for>
+  </ul>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 78px; padding: 12px 16px; background: #f7f1e2; border-top: 1px solid #e6dcc0; display: flex; gap: 10px">
+    <sc-if value="{{inWeek}}" hint-placeholder-val="{{false}}">
+      <button type="button" onClick="{{toggle}}" aria-pressed="true" style="flex: 1; height: 50px; border-radius: 12px; border: 0; background: #0b6b73; color: #ffffff; font: inherit; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>
+        In this week
+      </button>
+    </sc-if>
+    <sc-if value="{{notInWeek}}" hint-placeholder-val="{{true}}">
+      <button type="button" onClick="{{toggle}}" aria-pressed="false" style="flex: 1; height: 50px; border-radius: 12px; border: 0; background: #a71930; color: #ffffff; font: inherit; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+        Add to this week
+      </button>
+    </sc-if>
+    <button type="button" aria-label="Delete recipe" style="width: 50px; height: 50px; border-radius: 12px; border: 1px solid #a71930; background: #ffffff; color: #a71930; display: flex; align-items: center; justify-content: center; cursor: pointer">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg>
+    </button>
+  </div>
+
+  <nav aria-label="Primary" style="position: absolute; left: 0; right: 0; bottom: 0; height: 78px; background: #ffffff; border-top: 1px solid #d9cba6; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding-bottom: 10px; box-sizing: border-box">
+    <a href="Main.dc.html" aria-current="page" style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #a71930; font-size: 12px; font-weight: 700">
+      <span style="position: absolute; top: 0; width: 36px; height: 3px; border-radius: 0 0 3px 3px; background: #a71930"></span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>
+      Recipes
+    </a>
+    <a href="ThisWeek.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+      This Week
+    </a>
+    <a href="Groceries.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>
+      Groceries
+    </a>
+    <a href="Settings.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+      Settings
+    </a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { servings: 6, inWeek: true };
+  }
+  renderVals() {
+    var self = this;
+    var base = 6;
+    var scale = this.state.servings / base;
+    function fmt(n) {
+      var r = Math.round(n * 100) / 100;
+      return String(r);
+    }
+    var raw = [
+      { q: 2, u: 'lb', name: 'chicken breast', note: '' },
+      { q: 28, u: 'oz', name: 'green enchilada sauce', note: '' },
+      { q: 12, u: '', name: 'corn tortillas', note: '' },
+      { q: 3, u: 'cups', name: 'Monterey Jack cheese', note: ', shredded' },
+      { q: 1, u: 'cup', name: 'sour cream', note: '' },
+      { q: 1, u: '', name: 'yellow onion', note: ', diced' },
+      { q: 3, u: 'cloves', name: 'garlic', note: ', minced' },
+      { q: 1, u: 'tsp', name: 'ground cumin', note: '' },
+      { q: 1, u: 'tsp', name: 'salt', note: '' },
+      { q: 0.5, u: 'cup', name: 'cilantro', note: ', chopped' },
+      { q: 1, u: '', name: 'lime', note: '' }
+    ];
+    return {
+      servings: this.state.servings,
+      inc: function () { self.setState({ servings: Math.min(24, self.state.servings + 1) }); },
+      dec: function () { self.setState({ servings: Math.max(1, self.state.servings - 1) }); },
+      inWeek: this.state.inWeek,
+      notInWeek: !this.state.inWeek,
+      toggle: function () { self.setState({ inWeek: !self.state.inWeek }); },
+      ingredients: raw.map(function (i) {
+        return { amount: (fmt(i.q * scale) + ' ' + i.u).trim(), name: i.name, note: i.note };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MealFlow grocery list</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0b6b73}a:hover{color:#7d1223}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #f7f1e2; color: #1a1a1a; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <header style="padding: 22px 20px 0; display: flex; flex-direction: column; gap: 4px">
+    <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 34px; line-height: 1">Grocery list</h1>
+    <span style="font-size: 13px; color: #5c5750">From 3 recipes. Review before sending to Fry’s.</span>
+  </header>
+
+  <ol aria-label="Shopping steps" style="list-style: none; margin: 14px 20px 0; padding: 6px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; background: #ffffff; border: 1px solid #e6dcc0; border-radius: 14px">
+    <li style="display: flex"><a href="ThisWeek.dc.html" style="flex: 1; height: 40px; border-radius: 10px; color: #0b6b73; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 700"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Plan</a></li>
+    <li style="display: flex"><a href="Groceries.dc.html" aria-current="step" style="flex: 1; height: 40px; border-radius: 10px; background: #a71930; color: #ffffff; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 700"><span style="width: 20px; height: 20px; border-radius: 10px; background: #ffffff; color: #a71930; font-size: 12px; display: flex; align-items: center; justify-content: center">2</span>List</a></li>
+    <li style="display: flex"><a href="FrysReview.dc.html" style="flex: 1; height: 40px; border-radius: 10px; color: #5c5750; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 600"><span style="width: 20px; height: 20px; border-radius: 10px; border: 1.5px solid #5c5750; box-sizing: border-box; font-size: 12px; display: flex; align-items: center; justify-content: center">3</span>Fry’s cart</a></li>
+  </ol>
+
+  <div style="margin: 14px 20px 0; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+    <span style="font-size: 14px; font-weight: 700">{{countLabel}}</span>
+    <button type="button" role="switch" aria-checked="{{hideStr}}" onClick="{{toggleHide}}" style="height: 44px; padding: 0 4px 0 0; border: 0; background: transparent; color: #1a1a1a; font: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; cursor: pointer">
+      Hide what I have
+      <span style="width: 46px; height: 28px; border-radius: 14px; background: {{switchBg}}; position: relative; display: block">
+        <span style="position: absolute; top: 3px; left: {{knobLeft}}; width: 22px; height: 22px; border-radius: 11px; background: #ffffff; box-shadow: 0 1px 3px rgba(0,0,0,0.3)"></span>
+      </span>
+    </button>
+  </div>
+
+  <ul style="list-style: none; margin: 10px 20px 0; padding: 0 0 0 14px; background: #ffffff; border: 1px solid #e6dcc0; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden">
+    <sc-for list="{{lines}}" as="l" hint-placeholder-count="8">
+      <li style="display: flex; align-items: center; gap: 10px; padding: 8px 6px 8px 0; border-bottom: 1px solid #f0e8d4; opacity: {{l.opacity}}">
+        <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+          <span style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px">
+            <span style="font-size: 15px; font-weight: 700">{{l.name}}</span>
+            <span style="font-size: 14px; font-weight: 700; color: #a71930; white-space: nowrap">{{l.amount}}</span>
+          </span>
+          <span style="font-size: 12px; color: #5c5750; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{l.from}}</span>
+        </span>
+        <sc-if value="{{l.inPantry}}" hint-placeholder-val="{{false}}">
+          <button type="button" onClick="{{l.toggle}}" aria-pressed="true" aria-label="{{l.name}}: already have it" style="flex: none; height: 40px; padding: 0 10px; border-radius: 10px; border: 0; background: #0b6b73; color: #ffffff; font: inherit; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px; cursor: pointer">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>
+            Have it
+          </button>
+        </sc-if>
+        <sc-if value="{{l.needed}}" hint-placeholder-val="{{true}}">
+          <button type="button" onClick="{{l.toggle}}" aria-pressed="false" aria-label="{{l.name}}: I already have this" style="flex: none; height: 40px; padding: 0 10px; border-radius: 10px; border: 1px solid #d9cba6; background: #ffffff; color: #1a1a1a; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer">Have it?</button>
+        </sc-if>
+      </li>
+    </sc-for>
+  </ul>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 78px; padding: 12px 16px; background: #f7f1e2; border-top: 1px solid #e6dcc0; display: flex; flex-direction: column; gap: 6px">
+    <a href="FrysReview.dc.html" style="height: 52px; border-radius: 12px; background: #a71930; color: #ffffff; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 700">
+      Match {{neededCount}} items to Fry’s
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+    </a>
+    <span style="text-align: center; font-size: 12px; color: #5c5750">Items you already have are skipped.</span>
+  </div>
+
+  <nav aria-label="Primary" style="position: absolute; left: 0; right: 0; bottom: 0; height: 78px; background: #ffffff; border-top: 1px solid #d9cba6; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding-bottom: 10px; box-sizing: border-box">
+    <a href="Main.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>
+      Recipes
+    </a>
+    <a href="ThisWeek.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+      This Week
+    </a>
+    <a href="Groceries.dc.html" aria-current="page" style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #a71930; font-size: 12px; font-weight: 700">
+      <span style="position: absolute; top: 0; width: 36px; height: 3px; border-radius: 0 0 3px 3px; background: #a71930"></span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>
+      Groceries
+    </a>
+    <a href="Settings.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+      Settings
+    </a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { hide: false, pantry: { salt: true, oil: true } };
+  }
+  renderVals() {
+    var self = this;
+    var all = [
+      { id: 'chicken', name: 'Chicken breast', amount: '3.5 lb', from: 'Enchiladas, Fajitas' },
+      { id: 'onion', name: 'Yellow onion', amount: '3', from: 'Enchiladas, Turkey Chili, Fajitas' },
+      { id: 'garlic', name: 'Garlic', amount: '7 cloves', from: 'Enchiladas, Turkey Chili' },
+      { id: 'turkey', name: 'Ground turkey', amount: '2 lb', from: 'Turkey Chili' },
+      { id: 'beans', name: 'Kidney beans', amount: '2 cans', from: 'Turkey Chili' },
+      { id: 'peppers', name: 'Bell peppers', amount: '3', from: 'Fajitas' },
+      { id: 'corn', name: 'Corn tortillas', amount: '12', from: 'Enchiladas' },
+      { id: 'flour', name: 'Flour tortillas', amount: '8', from: 'Fajitas' },
+      { id: 'cheese', name: 'Monterey Jack cheese', amount: '3 cups', from: 'Enchiladas' },
+      { id: 'salt', name: 'Salt', amount: '2 tsp', from: 'Enchiladas, Turkey Chili' },
+      { id: 'oil', name: 'Olive oil', amount: '3 tbsp', from: 'Turkey Chili, Fajitas' }
+    ];
+    var pantry = this.state.pantry;
+    var hide = this.state.hide;
+    var needed = all.filter(function (l) { return !pantry[l.id]; }).length;
+    var have = all.length - needed;
+    var lines = all.filter(function (l) { return !(hide && pantry[l.id]); }).map(function (l) {
+      var inPantry = Boolean(pantry[l.id]);
+      return Object.assign({}, l, {
+        inPantry: inPantry,
+        needed: !inPantry,
+        opacity: inPantry ? '0.6' : '1',
+        toggle: function () {
+          var next = Object.assign({}, self.state.pantry);
+          if (next[l.id]) { delete next[l.id]; } else { next[l.id] = true; }
+          self.setState({ pantry: next });
+        }
+      });
+    });
+    return {
+      lines: lines,
+      neededCount: needed,
+      countLabel: all.length + ' items · ' + have + ' in pantry',
+      hideStr: hide ? 'true' : 'false',
+      switchBg: hide ? '#0b6b73' : '#c9bb96',
+      knobLeft: hide ? '21px' : '3px',
+      toggleHide: function () { self.setState({ hide: !self.state.hide }); }
+    };
+  }
+}
+</script>
+</body>
+</html>
