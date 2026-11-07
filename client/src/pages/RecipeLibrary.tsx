@@ -117,11 +117,12 @@ export function RecipeLibrary() {
               onChange={(e) => setQuery(e.target.value)}
             />
           </label>
-          <Link className="button add-recipe" to="/recipes/new">
+          {/* Both open the one "Add a recipe" screen, preset to a source. */}
+          <Link className="button add-recipe" to="/recipes/import?source=type">
             <Icon name="plus" size={20} strokeWidth={2.6} />
             <span className="add-recipe-text">Add recipe</span>
           </Link>
-          <Link className="button-outline" to="/recipes/import">
+          <Link className="button-outline" to="/recipes/import?source=url">
             Import
           </Link>
         </div>

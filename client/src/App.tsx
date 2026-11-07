@@ -1,5 +1,5 @@
 // ABOUTME: App shell and client routes.
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import { HouseholdProvider } from "./components/HouseholdProvider";
 import { NavBar } from "./components/NavBar";
@@ -27,11 +27,18 @@ function AppHeader() {
   );
 }
 
+// The recipe form keeps its own Cancel / Save bar, so phones hide the tab bar
+// there (INT-MF-0009).
+function isFormScreen(pathname: string): boolean {
+  return pathname === "/recipes/new" || /^\/recipes\/[^/]+\/edit$/.test(pathname);
+}
+
 function App() {
+  const { pathname } = useLocation();
   return (
     <HouseholdProvider>
       <SelectionsProvider>
-        <div className="app-shell">
+        <div className={isFormScreen(pathname) ? "app-shell form-screen" : "app-shell"}>
           <AppHeader />
           <main>
             <Routes>

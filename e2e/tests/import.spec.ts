@@ -5,6 +5,7 @@ test.beforeEach(async ({ request }) => resetApp(request));
 
 test("paste a recipe, review the extracted ingredients, then save", async ({ page }) => {
   await page.goto("/recipes/import");
+  await page.getByRole("radio", { name: /Paste text/ }).check();
 
   await page.getByLabel(/paste the recipe text/i).fill(
     ["Pasted Curry", "Serves 4", "Ingredients", "2 cups rice", "1 onion, diced", "3 cloves garlic"].join("\n"),
