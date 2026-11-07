@@ -46,7 +46,7 @@ test.describe("shopping flow steps", () => {
     await expect(page).toHaveURL(/\/frys$/);
     await expect(currentStep(page)).toHaveAccessibleName("Step 3: Fry’s cart");
     await expect(page.locator(".card").first()).toBeVisible();
-    await expectPinnedAboveTabBar(page, /add to fry.s/i);
+    await expectPinnedAboveTabBar(page, /add \d+ items? to fry.s cart/i);
     await expect(page.locator(".action-bar").getByRole("button")).toHaveCount(1);
   });
 

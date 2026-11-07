@@ -38,6 +38,9 @@ export function createApp() {
           // Served over plain HTTP on the home LAN by design — do not tell
           // browsers to upgrade same-origin asset requests to HTTPS.
           "upgrade-insecure-requests": null,
+          // Fry's product photos on the review screen come from Kroger's
+          // image host (INT-MF-0005); nothing else may load cross-origin.
+          "img-src": ["'self'", "data:", "https://www.kroger.com"],
         },
       },
       // No HTTPS in the deployment target; HSTS would be meaningless.

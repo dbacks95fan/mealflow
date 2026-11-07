@@ -55,3 +55,8 @@ export function formatAmounts(quantities: { quantity: number | null; unit: strin
   if (quantities.length === 0) return "";
   return quantities.map((q) => formatAmount(q.quantity, q.unit)).join(" + ");
 }
+
+/** A price in dollars, e.g. "$3.49". */
+export function money(value: number): string {
+  return `$${value.toFixed(2)}`;
+}

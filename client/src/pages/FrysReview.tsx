@@ -1,36 +1,51 @@
-// ABOUTME: Review the Fry's product match for each grocery-list item — change a
-// ABOUTME: brand (which is remembered), adjust the suggested pack count or set a
-// ABOUTME: manual-review quantity, see the running total, then add everything to
-// ABOUTME: the Fry's cart.
+// ABOUTME: Review the Fry's product match for each grocery-list item — compare
+// ABOUTME: products by photo, size, and price and change one (which is
+// ABOUTME: remembered), adjust the suggested pack count or set a manual-review
+// ABOUTME: quantity, see the running total, then add everything to the Fry's cart.
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   getFrysMatch,
+  getFrysStatus,
   saveFrysMatch,
   submitFrysCart,
   type FittedProduct,
   type FrysCartResult,
   type FrysMatchLine,
 } from "../lib/api";
+import { FrysItemCard } from "../components/FrysItemCard";
 import { Icon } from "../components/Icon";
-import { PackFitNote } from "../components/PackFitNote";
-import { QuantityStepper } from "../components/QuantityStepper";
 import { StepBar } from "../components/StepBar";
-import { formatAmounts } from "../lib/format";
-
-function money(value: number): string {
-  return `$${value.toFixed(2)}`;
-}
+import { money } from "../lib/format";
 
 function startingQuantity(product: FittedProduct): number {
   return product.fit.status === "suggested" ? product.fit.packs : 1;
 }
 
+function PageHeader() {
+  return (
+    <>
+      <div className="page-title">
+        <Link to="/groceries" className="back-link" aria-label="Back to grocery list">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M15 6l-6 6 6 6" />
+          </svg>
+        </Link>
+        <h2>Fry’s products</h2>
+      </div>
+      <StepBar current={3} />
+    </>
+  );
+}
+
 export function FrysReview() {
   const [lines, setLines] = useState<FrysMatchLine[] | null>(null);
+  const [storeName, setStoreName] = useState<string | null>(null);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   // Manual-review items whose quantity the household has set.
   const [reviewed, setReviewed] = useState<Record<string, boolean>>({});
+  // Items whose product the household changed on this visit.
+  const [changed, setChanged] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<FrysCartResult | null>(null);
@@ -42,6 +57,11 @@ export function FrysReview() {
         setQuantities(Object.fromEntries(match.lines.map((l) => [l.normalizedName, l.neededQuantity])));
       })
       .catch((err: Error) => setError(err.message));
+    // The store line is a convenience; the match above already failed loudly
+    // if no store is set, so a failed status load just hides the line.
+    getFrysStatus()
+      .then((status) => setStoreName(status.locationName))
+      .catch(() => setStoreName(null));
   }, []);
 
   const total = useMemo(() => {
@@ -63,8 +83,7 @@ export function FrysReview() {
   if (error) {
     return (
       <div className="stack">
-        <h2>Fry’s products</h2>
-        <StepBar current={3} />
+        <PageHeader />
         <p role="alert">{error}</p>
         <p className="muted">
           Check your <Link to="/settings">Fry’s connection and store</Link>, and that you have{" "}
@@ -77,12 +96,13 @@ export function FrysReview() {
   if (lines.length === 0) {
     return (
       <div className="stack">
-        <h2>Fry’s products</h2>
-        <StepBar current={3} />
+        <PageHeader />
         <p>Nothing to match — your grocery list is empty.</p>
       </div>
     );
   }
+
+  const addable = lines.filter((line) => line.chosen).length;
 
   async function changeProduct(line: FrysMatchLine, productId: string) {
     const product = line.options.find((o) => o.productId === productId);
@@ -94,6 +114,7 @@ export function FrysReview() {
     // suggestion, and a product that can't convert goes back to manual review.
     setQuantities((q) => ({ ...q, [line.normalizedName]: startingQuantity(product) }));
     setReviewed((r) => ({ ...r, [line.normalizedName]: false }));
+    setChanged((c) => ({ ...c, [line.normalizedName]: true }));
     try {
       await saveFrysMatch(line.normalizedName, {
         productId: product.productId,
@@ -135,8 +156,20 @@ export function FrysReview() {
 
   return (
     <div className="stack">
-      <h2>Fry’s products</h2>
-      <StepBar current={3} />
+      <PageHeader />
+
+      {storeName && (
+        <p className="store-line muted">
+          <span className="store-name">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z" />
+              <circle cx="12" cy="9" r="2.5" />
+            </svg>
+            {storeName}
+          </span>
+          <Link to="/settings">Change store</Link>
+        </p>
+      )}
 
       {result && (
         <div className={result.allSucceeded ? "notice" : "notice warn"} role="status">
@@ -166,66 +199,29 @@ export function FrysReview() {
 
       <ul className="card-list">
         {lines.map((line) => (
-          <li
+          <FrysItemCard
             key={line.normalizedName}
-            className={
-              line.chosen?.fit.status === "manual" && !reviewed[line.normalizedName] ? "card needs-review" : "card"
-            }
-          >
-            <div className="toolbar">
-              <strong>{line.name}</strong>
-              <span className="muted">{formatAmounts(line.quantities)}</span>
-            </div>
-
-            {line.unmatched ? (
-              <p role="alert">No Fry’s product found — add this one manually.</p>
-            ) : (
-              <>
-                <label className="inline-field">
-                  Product
-                  <select
-                    value={line.chosen?.productId ?? ""}
-                    onChange={(e) => void changeProduct(line, e.target.value)}
-                  >
-                    {line.options.map((option) => (
-                      <option key={option.productId} value={option.productId}>
-                        {[option.brand, option.description, option.size].filter(Boolean).join(" · ")}
-                        {option.price != null ? ` — ${money(option.price)}` : ""}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                {line.chosen && (
-                  <PackFitNote
-                    fit={line.chosen.fit}
-                    quantity={quantities[line.normalizedName] ?? line.neededQuantity}
-                    reviewed={Boolean(reviewed[line.normalizedName])}
-                    onUseSuggestion={() =>
-                      line.chosen?.fit.status === "suggested" && setQuantity(line, line.chosen.fit.packs)
-                    }
-                  />
-                )}
-                <div className="inline-field">
-                  <span>Quantity</span>
-                  <QuantityStepper
-                    label={line.name}
-                    value={quantities[line.normalizedName] ?? line.neededQuantity}
-                    onChange={(next) => setQuantity(line, next)}
-                  />
-                </div>
-                {line.remembered && <p className="muted">Remembered from a previous recipe.</p>}
-              </>
-            )}
-          </li>
+            line={line}
+            quantity={quantities[line.normalizedName] ?? line.neededQuantity}
+            reviewed={Boolean(reviewed[line.normalizedName])}
+            productChanged={Boolean(changed[line.normalizedName])}
+            onQuantity={(next) => setQuantity(line, next)}
+            onProduct={(productId) => void changeProduct(line, productId)}
+          />
         ))}
       </ul>
 
       <div className="action-bar">
-        <p>
-          <strong>Estimated total: {money(total)}</strong> (prices from Fry’s where available)
+        <p className="action-total">
+          <span>Estimated total</span> <strong>{money(total)}</strong>
         </p>
-        <button type="button" className="button" onClick={addAll} disabled={submitting}>
-          {submitting ? "Adding…" : "Add to Fry’s"}
+        <p className="muted">
+          Pack counts are rounded up from your recipes. Items marked Manual review start at 1 and change to Reviewed
+          once you set the quantity.
+        </p>
+        <button type="button" className="button" onClick={addAll} disabled={submitting || addable === 0}>
+          <Icon name="cart" size={20} />
+          {submitting ? "Adding…" : `Add ${addable} item${addable === 1 ? "" : "s"} to Fry’s cart`}
         </button>
       </div>
     </div>

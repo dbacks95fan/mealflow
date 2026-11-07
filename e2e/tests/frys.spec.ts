@@ -25,15 +25,16 @@ test("connect Fry's, pick a store, review matches, and add to cart with a partia
   // Review the product matches.
   await page.goto("/frys");
   const riceCard = page.locator(".card", { hasText: "rice" });
-  await expect(riceCard.getByRole("combobox")).toBeVisible();
-  await expect(page.getByText(/Estimated total: \$/)).toBeVisible();
+  await expect(riceCard.getByRole("button", { name: "Change product (2 options)" })).toBeVisible();
+  await expect(page.locator(".action-total")).toHaveText(/Estimated total \$/);
 
   // Change the brand for rice (persists server-side).
-  await riceCard.getByRole("combobox").selectOption({ index: 1 });
-  await expect(riceCard.getByRole("combobox")).toHaveValue(/-b$/);
+  await riceCard.getByRole("button", { name: "Change product (2 options)" }).click();
+  await riceCard.getByRole("radio", { name: /Brand B/ }).check();
+  await expect(riceCard.getByRole("radio", { name: /Brand B/ })).toBeChecked();
 
   // Submit to the cart — the "failitem" line has an un-addable UPC.
-  await page.getByRole("button", { name: "Add to Fry’s" }).click();
+  await page.getByRole("button", { name: "Add 2 items to Fry’s cart" }).click();
   // Each quantity stepper is also a status region, so pick the cart result.
   const result = page.getByRole("status").filter({ hasText: /added to your Fry/ });
   await expect(result).toContainText(/1 item added/);

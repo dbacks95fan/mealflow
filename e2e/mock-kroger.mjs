@@ -1,6 +1,7 @@
 // ABOUTME: Minimal fake Kroger API for e2e — token, authorize redirect,
-// ABOUTME: product search, product-by-id, locations, and cart add (upc "FAIL"
-// ABOUTME: makes that item fail). No dependencies.
+// ABOUTME: product search (with pack sizes and photos), product-by-id,
+// ABOUTME: locations, and cart add (upc "FAIL" makes that item fail). No
+// ABOUTME: dependencies.
 import { createServer } from "node:http";
 
 const PORT = Number(process.env.MOCK_KROGER_PORT ?? 4010);
@@ -31,6 +32,18 @@ function sizeFor(termSlug, idSuffix) {
   return sizes ? sizes[idSuffix === "b" ? 1 : 0] : "1 unit";
 }
 
+// A 1x1 PNG. The app's CSP only allows images from itself, data: URIs, and
+// Kroger's image host, so the mock serves photos inline.
+const PHOTO = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=";
+
+// Terms whose products come back without a photo, and terms with no match.
+const NO_PHOTO = new Set(["mystery-spice"]);
+const NO_MATCH = /unicorn/i;
+
+function imagesFor(termSlug) {
+  return NO_PHOTO.has(termSlug) ? [] : [{ sizes: [{ size: "medium", url: PHOTO }] }];
+}
+
 function productFor(term, idSuffix, brand, price) {
   // A term containing "fail" yields an un-addable UPC, to exercise partial failure.
   const upc = /fail/i.test(term) ? "FAIL" : `upc-${slug(term)}-${idSuffix}`;
@@ -40,7 +53,7 @@ function productFor(term, idSuffix, brand, price) {
     description: `${brand} ${term}`,
     brand,
     items: [{ price: { regular: price }, size: sizeFor(slug(term), idSuffix) }],
-    images: [{ sizes: [{ size: "medium", url: `http://mock/${idSuffix}.jpg` }] }],
+    images: imagesFor(slug(term)),
   };
 }
 
@@ -70,6 +83,7 @@ const server = createServer((req, res) => {
 
   if (path === "/products" && req.method === "GET") {
     const term = url.searchParams.get("filter.term") ?? "item";
+    if (NO_MATCH.test(term)) return send(res, 200, { data: [] });
     return send(res, 200, {
       data: [
         productFor(term, "a", "Brand A", 3.49),
@@ -90,7 +104,7 @@ const server = createServer((req, res) => {
           description: `Saved ${id}`,
           brand: "Brand A",
           items: [{ price: { regular: 3.49 }, size: match ? sizeFor(match[1], match[2]) : "1 unit" }],
-          images: [],
+          images: imagesFor(match ? match[1] : ""),
         },
       ],
     });
