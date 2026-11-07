@@ -6,7 +6,7 @@ test.beforeEach(async ({ request }) => resetApp(request));
 test("create, view, edit, and delete a recipe with structured ingredients", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByText(/recipe library is empty/i)).toBeVisible();
-  await page.getByRole("link", { name: /add (your )?first recipe/i }).click();
+  await page.getByRole("link", { name: "Type one in" }).click();
   await expect(page).toHaveURL(/\/recipes\/new$/);
 
   await page.getByLabel("Recipe name").fill("Playwright Pancakes");
