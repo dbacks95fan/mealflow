@@ -537,6 +537,63 @@ legend {
   padding-left: 1.2rem;
 }
 
+/* Notices that lead with an icon (manual review, Reviewed, the review banner). */
+.notice:has(> .icon) {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mf-space-2);
+}
+
+.notice > .icon {
+  flex: none;
+  margin-top: 2px;
+}
+
+/* Reviewed: the household set a manual-review quantity (INT-MF-0004). */
+.notice.reviewed {
+  border-color: var(--mf-selected);
+}
+
+/* Pack counts (components/PackFitNote.tsx) */
+.card.needs-review {
+  border: 2px solid var(--mf-warn-border);
+}
+
+.pack-fit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-1);
+  margin: var(--mf-space-2) 0;
+}
+
+.fit-suggested {
+  display: flex;
+  align-items: center;
+  gap: var(--mf-space-1);
+  color: var(--mf-accent);
+  font-weight: 700;
+}
+
+.card .notice {
+  margin: var(--mf-space-2) 0;
+}
+
+/* A text-styled button, for secondary actions inside a sentence. */
+button.link-button {
+  min-width: 0;
+  padding: 0 var(--mf-space-1);
+  border: 0;
+  background: transparent;
+  color: var(--mf-accent);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+button.link-button:hover {
+  background: transparent;
+  color: var(--mf-text);
+}
+
 /* Quantity stepper (see components/QuantityStepper.tsx) */
 .stepper {
   display: inline-flex;

@@ -30,6 +30,12 @@ const PATHS = {
     </>
   ),
   check: <path d="M5 12l5 5 9-10" />,
+  alert: (
+    <>
+      <path d="M12 3l9.5 17h-19z" />
+      <path d="M12 10v4M12 17.5h.01" />
+    </>
+  ),
   cart: (
     <>
       <circle cx="9" cy="20" r="1.5" />

@@ -139,14 +139,22 @@ export interface FrysProduct {
   imageUrl: string | null;
 }
 
+/** How a product's pack size fits the recipe amount (INT-MF-0004). */
+export type PackFit =
+  | { status: "suggested"; packs: number; needed: string; perPack: string }
+  | { status: "manual"; reason: string };
+
+export type FittedProduct = FrysProduct & { fit: PackFit };
+
 export interface FrysMatchLine {
   normalizedName: string;
   name: string;
   quantities: GroceryQuantity[];
+  /** Starting quantity: the suggested packs, or 1 for manual review. */
   neededQuantity: number;
   remembered: boolean;
-  chosen: FrysProduct | null;
-  options: FrysProduct[];
+  chosen: FittedProduct | null;
+  options: FittedProduct[];
   unmatched: boolean;
 }
 
