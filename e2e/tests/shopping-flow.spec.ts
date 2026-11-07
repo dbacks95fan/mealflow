@@ -40,8 +40,8 @@ test.describe("shopping flow steps", () => {
     await expect(page).toHaveURL(/\/groceries$/);
     await expect(currentStep(page)).toHaveAccessibleName("Step 2: List");
     await expect(page.getByRole("link", { name: "Step 1: Plan (done)" })).toBeVisible();
-    await expectPinnedAboveTabBar(page, "Match to Fry’s products");
-    await page.getByRole("link", { name: "Match to Fry’s products" }).click();
+    await expectPinnedAboveTabBar(page, "Match 6 items to Fry’s");
+    await page.getByRole("link", { name: "Match 6 items to Fry’s" }).click();
 
     await expect(page).toHaveURL(/\/frys$/);
     await expect(currentStep(page)).toHaveAccessibleName("Step 3: Fry’s cart");

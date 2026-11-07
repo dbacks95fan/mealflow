@@ -25,19 +25,14 @@ test("combined grocery list sums shared ingredients and hides pantry items", asy
 
   await page.getByRole("link", { name: "Groceries" }).click();
 
-  const flourRow = page.locator(".card", { hasText: "flour" });
+  const flourRow = page.locator(".grocery-row", { hasText: "flour" });
   await expect(flourRow.getByText("3 cup")).toBeVisible();
-  await expect(flourRow.getByText(/from Grocery Bread, Grocery Cake/)).toBeVisible();
+  await expect(flourRow.getByText("From Grocery Bread, Grocery Cake")).toBeVisible();
 
-  await page
-    .locator(".card", { hasText: "salt" })
-    .getByRole("button", { name: /i already have this/i })
-    .click();
-  await expect(
-    page.locator(".card", { hasText: "salt" }).getByRole("button", { name: /already have/i }),
-  ).toBeVisible();
+  await page.getByRole("button", { name: "Have it: salt" }).click();
+  await expect(page.getByRole("button", { name: "Have it: salt" })).toHaveAttribute("aria-pressed", "true");
 
-  await page.getByLabel(/hide items i already have/i).check();
-  await expect(page.locator(".card", { hasText: "salt" })).toHaveCount(0);
-  await expect(page.locator(".card", { hasText: "flour" })).toBeVisible();
+  await page.getByRole("switch", { name: "Hide what I have" }).click();
+  await expect(page.locator(".grocery-row", { hasText: "salt" })).toHaveCount(0);
+  await expect(page.locator(".grocery-row", { hasText: "flour" })).toBeVisible();
 });

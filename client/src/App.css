@@ -725,6 +725,74 @@ button.change-product {
   font-size: var(--mf-text-lg);
 }
 
+/* Grocery list (pages/Groceries.tsx, INT-MF-0007) */
+.grocery-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-2);
+}
+
+.grocery-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.grocery-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-3);
+  padding: var(--mf-space-3) var(--mf-space-4);
+}
+
+.grocery-row + .grocery-row {
+  border-top: 1px solid var(--mf-border);
+}
+
+.grocery-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.grocery-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--mf-space-2);
+}
+
+.grocery-amount {
+  color: var(--mf-primary-text);
+  font-weight: 700;
+}
+
+/* Pantry rows are dimmed with the muted text color rather than opacity, so
+   they still meet contrast. */
+.grocery-row.in-pantry .grocery-line,
+.grocery-row.in-pantry .grocery-amount {
+  color: var(--mf-muted);
+}
+
+button.pantry-button {
+  flex: none;
+  border-color: var(--mf-selected);
+  color: var(--mf-accent);
+  white-space: nowrap;
+}
+
+button.pantry-button[aria-pressed="true"] {
+  color: var(--mf-on-selected);
+}
+
+.action-note {
+  text-align: center;
+}
+
 /* Cart result (components/CartResult.tsx, INT-MF-0006) */
 .cart-result-head {
   display: flex;
