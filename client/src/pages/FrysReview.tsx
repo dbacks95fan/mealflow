@@ -13,6 +13,7 @@ import {
   type FrysCartResult,
   type FrysMatchLine,
 } from "../lib/api";
+import { CartResult } from "../components/CartResult";
 import { FrysItemCard } from "../components/FrysItemCard";
 import { Icon } from "../components/Icon";
 import { StepBar } from "../components/StepBar";
@@ -49,6 +50,7 @@ export function FrysReview() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<FrysCartResult | null>(null);
+  const [submitted, setSubmitted] = useState<{ name: string; quantity: number }[]>([]);
 
   useEffect(() => {
     getFrysMatch()
@@ -146,12 +148,26 @@ export function FrysReview() {
         name: line.chosen!.description,
       }));
     try {
-      setResult(await submitFrysCart(items));
+      const outcome = await submitFrysCart(items);
+      setSubmitted(items.map(({ name, quantity }) => ({ name, quantity })));
+      setResult(outcome);
+      window.scrollTo?.(0, 0);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to add items to the cart");
     } finally {
       setSubmitting(false);
     }
+  }
+
+  if (result) {
+    return (
+      <CartResult
+        result={result}
+        submitted={submitted}
+        unmatched={lines.filter((line) => !line.chosen).map((line) => line.name)}
+        onBack={() => setResult(null)}
+      />
+    );
   }
 
   return (
@@ -169,24 +185,6 @@ export function FrysReview() {
           </span>
           <Link to="/settings">Change store</Link>
         </p>
-      )}
-
-      {result && (
-        <div className={result.allSucceeded ? "notice" : "notice warn"} role="status">
-          <p>
-            {result.added.length} item{result.added.length === 1 ? "" : "s"} added to your Fry’s cart
-            {result.failed.length > 0 ? `, ${result.failed.length} failed.` : "."}
-          </p>
-          {result.failed.length > 0 && (
-            <ul>
-              {result.failed.map((f) => (
-                <li key={f.name}>
-                  {f.name}: {f.reason}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
       )}
 
       {needsReview > 0 && (

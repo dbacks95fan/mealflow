@@ -110,34 +110,35 @@ describe("FrysReview", () => {
   it("reports a partial cart failure without claiming full success", async () => {
     api.getFrysMatch.mockResolvedValue({
       currency: "USD",
-      total: 3.49,
+      total: 0,
       lines: [
-        {
-          normalizedName: "rice",
-          name: "rice",
-          quantities: [],
-          neededQuantity: 1,
-          remembered: false,
-          chosen: product("a", "Brand A", 3.49),
-          options: [product("a", "Brand A", 3.49)],
-          unmatched: false,
-        },
+        line("rice", [product("a", "Brand A", 3.49)], 1),
+        { ...line("beans", [product("b", "Brand B", 1.99)], 1) },
+        { ...line("unicorn dust", [], 1), chosen: null, unmatched: true },
       ],
     });
     api.submitFrysCart.mockResolvedValue({
       added: ["Brand A rice"],
-      failed: [{ name: "Beans", reason: "invalid upc" }],
+      failed: [{ name: "Brand B rice", reason: "invalid upc" }],
       allSucceeded: false,
     });
     const user = userEvent.setup();
     render_();
 
-    await user.click(await screen.findByRole("button", { name: "Add 1 item to Fry’s cart" }));
-    // Each quantity stepper is also a status region, so pick the cart result.
-    const status = (await screen.findAllByRole("status")).find((el) => /added to your Fry/.test(el.textContent ?? ""))!;
-    expect(status).toHaveTextContent(/1 item added/i);
-    expect(status).toHaveTextContent(/1 failed/i);
-    expect(within(status).getByText(/Beans: invalid upc/)).toBeInTheDocument();
+    await user.click(await screen.findByRole("button", { name: "Add 2 items to Fry’s cart" }));
+    expect(api.submitFrysCart).toHaveBeenCalledWith([
+      { upc: "upc-a", quantity: 1, name: "Brand A rice" },
+      { upc: "upc-b", quantity: 1, name: "Brand B rice" },
+    ]);
+    const heading = await screen.findByRole("heading", { name: "1 of 2 items added to your Fry’s cart" });
+    expect(heading).toHaveFocus();
+    expect(heading.closest("[role=status]")).toHaveTextContent("Not everything made it.");
+    const failed = screen.getByRole("region", { name: "Failed items" });
+    expect(failed).toHaveTextContent("1 item failed");
+    expect(failed).toHaveTextContent("Brand B rice: invalid upc");
+    expect(screen.getByRole("region", { name: "Items not sent" })).toHaveTextContent(
+      "unicorn dust. Add it yourself in the Fry’s app.",
+    );
   });
 
   describe("pack counts (INT-MF-0004)", () => {
