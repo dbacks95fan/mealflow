@@ -10,6 +10,7 @@ import {
   type FrysCartResult,
   type FrysMatchLine,
 } from "../lib/api";
+import { StepBar } from "../components/StepBar";
 import { formatAmounts } from "../lib/format";
 
 function money(value: number): string {
@@ -43,6 +44,8 @@ export function FrysReview() {
   if (error) {
     return (
       <div className="stack">
+        <h2>Fry’s products</h2>
+        <StepBar current={3} />
         <p role="alert">{error}</p>
         <p className="muted">
           Check your <Link to="/settings">Fry’s connection and store</Link>, and that you have{" "}
@@ -52,7 +55,15 @@ export function FrysReview() {
     );
   }
   if (!lines) return <p>Matching your grocery list to Fry’s products…</p>;
-  if (lines.length === 0) return <p>Nothing to match — your grocery list is empty.</p>;
+  if (lines.length === 0) {
+    return (
+      <div className="stack">
+        <h2>Fry’s products</h2>
+        <StepBar current={3} />
+        <p>Nothing to match — your grocery list is empty.</p>
+      </div>
+    );
+  }
 
   async function changeProduct(line: FrysMatchLine, productId: string) {
     const product = line.options.find((o) => o.productId === productId);
@@ -95,6 +106,7 @@ export function FrysReview() {
   return (
     <div className="stack">
       <h2>Fry’s products</h2>
+      <StepBar current={3} />
 
       {result && (
         <div className={result.allSucceeded ? "notice" : "notice warn"} role="status">
@@ -161,13 +173,14 @@ export function FrysReview() {
         ))}
       </ul>
 
-      <p>
-        <strong>Estimated total: {money(total)}</strong> (prices from Fry’s where available)
-      </p>
-
-      <button type="button" onClick={addAll} disabled={submitting}>
-        {submitting ? "Adding…" : "Add to Fry’s"}
-      </button>
+      <div className="action-bar">
+        <p>
+          <strong>Estimated total: {money(total)}</strong> (prices from Fry’s where available)
+        </p>
+        <button type="button" className="button" onClick={addAll} disabled={submitting}>
+          {submitting ? "Adding…" : "Add to Fry’s"}
+        </button>
+      </div>
     </div>
   );
 }

@@ -13,8 +13,10 @@ import {
   type FrysLocation,
   type FrysStatus,
 } from "../lib/api";
+import { useHousehold } from "../lib/useHousehold";
 
 export function Settings() {
+  const household = useHousehold();
   const [params] = useSearchParams();
   const frysParam = params.get("frys");
   const [name, setName] = useState("");
@@ -44,6 +46,7 @@ export function Settings() {
     try {
       const updated = await renameHousehold(name.trim());
       setName(updated.name);
+      household?.setName(updated.name);
       setNotice("Household name saved.");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save");
