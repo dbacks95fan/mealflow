@@ -1,5 +1,6 @@
-// ABOUTME: Create or edit a recipe — name, servings, tags, and a dynamic list
-// ABOUTME: of ingredient rows (name / quantity / unit / note).
+// ABOUTME: Create, review (after an import), or edit a recipe — name, servings,
+// ABOUTME: tag chips, and stacked ingredient cards (name, then quantity / unit /
+// ABOUTME: note) that fit a phone, with a sticky Cancel / Save bar.
 import { useEffect, useState, type FormEvent } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
@@ -10,6 +11,13 @@ import {
   type RecipeDraft,
   type RecipeInput,
 } from "../lib/api";
+import { Icon } from "../components/Icon";
+
+const IMPORTED_FROM: Record<string, string> = {
+  url: "a web page",
+  paste: "pasted text",
+  file: "a file",
+};
 
 interface Row {
   name: string;
@@ -35,13 +43,16 @@ export function RecipeForm() {
   const editing = id != null;
   const navigate = useNavigate();
   const location = useLocation();
-  const draft = (location.state as { draft?: RecipeDraft } | null)?.draft ?? null;
+  const state = location.state as { draft?: RecipeDraft; source?: string } | null;
+  const draft = state?.draft ?? null;
+  const importedFrom = draft ? (IMPORTED_FROM[state?.source ?? ""] ?? "another source") : null;
 
   const [name, setName] = useState(() => draft?.name ?? "");
   const [servings, setServings] = useState(() =>
     draft?.servings != null ? String(draft.servings) : "",
   );
-  const [tags, setTags] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
   const [rows, setRows] = useState<Row[]>(() => (draft ? draftToRows(draft) : [{ ...blankRow }]));
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -56,7 +67,7 @@ export function RecipeForm() {
         setLoaded(true);
         setName(r.name);
         setServings(r.servings != null ? String(r.servings) : "");
-        setTags(r.tags.join(", "));
+        setTags(r.tags);
         setRows(
           r.ingredients.length > 0
             ? r.ingredients.map((i) => ({
@@ -83,6 +94,14 @@ export function RecipeForm() {
     setRows((current) =>
       current.length === 1 ? current : current.filter((_, i) => i !== index),
     );
+  }
+
+  /** Add every comma-separated tag in `raw` that isn't already a chip. */
+  function addTags(raw: string) {
+    const fresh = raw.split(",").map((t) => t.trim()).filter(Boolean);
+    if (fresh.length === 0) return;
+    setTags((current) => [...current, ...fresh.filter((t) => !current.includes(t))]);
+    setTagInput("");
   }
 
   async function handleSubmit(event: FormEvent) {
@@ -114,7 +133,8 @@ export function RecipeForm() {
     const payload: RecipeInput = {
       name: name.trim(),
       servings: servings.trim() ? Number(servings) : null,
-      tags: tags.split(",").map((t) => t.trim()).filter(Boolean),
+      // A tag still in the input when saving counts too.
+      tags: [...tags, ...tagInput.split(",").map((t) => t.trim()).filter((t) => t && !tags.includes(t))],
       ingredients,
     };
 
@@ -133,8 +153,14 @@ export function RecipeForm() {
   if (!loaded) return error ? <p role="alert">{error}</p> : <p>Loading recipe…</p>;
 
   return (
-    <form onSubmit={handleSubmit} className="stack">
-      <h2>{editing ? "Edit recipe" : "New recipe"}</h2>
+    <form onSubmit={handleSubmit} className="stack recipe-form">
+      <h2>{editing ? "Edit recipe" : draft ? "Review recipe" : "New recipe"}</h2>
+
+      {importedFrom && (
+        <p className="notice" role="note">
+          Imported from {importedFrom}. Check each ingredient, then save. Nothing is saved until you do.
+        </p>
+      )}
 
       <label>
         Recipe name
@@ -151,62 +177,104 @@ export function RecipeForm() {
         />
       </label>
 
-      <label>
-        Tags (comma separated, optional)
-        <input value={tags} onChange={(e) => setTags(e.target.value)} placeholder="dinner, vegetarian" />
-      </label>
+      <div className="tag-field">
+        <label htmlFor="recipe-tag-input">Tags (optional)</label>
+        {tags.length > 0 && (
+          <ul className="tag-row" aria-label="Tags">
+            {tags.map((tag) => (
+              <li key={tag} className="tag tag-chip">
+                {tag}
+                <button
+                  type="button"
+                  className="icon-button"
+                  aria-label={`Remove tag ${tag}`}
+                  onClick={() => setTags((current) => current.filter((t) => t !== tag))}
+                >
+                  <Icon name="close" size={14} strokeWidth={2.6} />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        <input
+          id="recipe-tag-input"
+          value={tagInput}
+          placeholder="Add a tag, then press Enter"
+          onChange={(e) => {
+            const value = e.target.value;
+            if (value.includes(",")) addTags(value);
+            else setTagInput(value);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              addTags(tagInput);
+            }
+          }}
+          onBlur={() => addTags(tagInput)}
+        />
+      </div>
 
-      <fieldset>
+      <fieldset className="ingredients">
         <legend>Ingredients</legend>
-        {rows.map((row, index) => (
-          <div key={index} className="ingredient-row">
-            <input
-              aria-label={`Ingredient ${index + 1} name`}
-              placeholder="Ingredient"
-              value={row.name}
-              onChange={(e) => updateRow(index, { name: e.target.value })}
-            />
-            <input
-              aria-label={`Ingredient ${index + 1} quantity`}
-              placeholder="Qty"
-              value={row.quantity}
-              onChange={(e) => updateRow(index, { quantity: e.target.value })}
-            />
-            <input
-              aria-label={`Ingredient ${index + 1} unit`}
-              placeholder="Unit"
-              value={row.unit}
-              onChange={(e) => updateRow(index, { unit: e.target.value })}
-            />
-            <input
-              aria-label={`Ingredient ${index + 1} note`}
-              placeholder="Note"
-              value={row.note}
-              onChange={(e) => updateRow(index, { note: e.target.value })}
-            />
-            <button
-              type="button"
-              onClick={() => removeRow(index)}
-              disabled={rows.length === 1}
-              aria-label={`Remove ingredient ${index + 1}`}
-            >
-              ✕
-            </button>
-          </div>
-        ))}
-        <button type="button" onClick={addRow}>
+        <ol className="ingredient-cards">
+          {rows.map((row, index) => (
+            <li key={index} className="card ingredient-card">
+              <div className="ingredient-name-row">
+                <input
+                  aria-label={`Ingredient ${index + 1} name`}
+                  placeholder="Ingredient"
+                  value={row.name}
+                  onChange={(e) => updateRow(index, { name: e.target.value })}
+                />
+                <button
+                  type="button"
+                  className="icon-button"
+                  onClick={() => removeRow(index)}
+                  disabled={rows.length === 1}
+                  aria-label={`Remove ingredient ${index + 1}`}
+                >
+                  <Icon name="close" size={20} />
+                </button>
+              </div>
+              <div className="ingredient-detail-row">
+                <input
+                  aria-label={`Ingredient ${index + 1} quantity`}
+                  placeholder="Qty"
+                  inputMode="decimal"
+                  value={row.quantity}
+                  onChange={(e) => updateRow(index, { quantity: e.target.value })}
+                />
+                <input
+                  aria-label={`Ingredient ${index + 1} unit`}
+                  placeholder="Unit"
+                  value={row.unit}
+                  onChange={(e) => updateRow(index, { unit: e.target.value })}
+                />
+                <input
+                  aria-label={`Ingredient ${index + 1} note`}
+                  placeholder="Note"
+                  value={row.note}
+                  onChange={(e) => updateRow(index, { note: e.target.value })}
+                />
+              </div>
+            </li>
+          ))}
+        </ol>
+        <button type="button" className="add-more add-ingredient" onClick={addRow}>
+          <Icon name="plus" size={18} strokeWidth={2.6} />
           Add ingredient
         </button>
       </fieldset>
 
       {error && <p role="alert">{error}</p>}
 
-      <div className="toolbar">
-        <button type="submit" disabled={submitting}>
-          {submitting ? "Saving…" : "Save recipe"}
-        </button>
+      <div className="action-bar form-actions">
         <button type="button" onClick={() => navigate(editing ? `/recipes/${id}` : "/")}>
           Cancel
+        </button>
+        <button type="submit" disabled={submitting}>
+          {submitting ? "Saving…" : "Save recipe"}
         </button>
       </div>
     </form>
