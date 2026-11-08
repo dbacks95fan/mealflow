@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MealFlow add a recipe</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0b6b73}a:hover{color:#7d1223}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #f7f1e2; color: #1a1a1a; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <header style="padding: 16px 12px 0; display: flex; align-items: center; gap: 4px">
+    <a href="Main.dc.html" aria-label="Back to recipes" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #1a1a1a; text-decoration: none">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+    </a>
+    <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 30px; line-height: 1">Add a recipe</h1>
+  </header>
+  <p style="margin: 8px 20px 0; font-size: 14px; color: #5c5750; line-height: 1.45">Choose how to bring it in. You will review every ingredient before anything is saved.</p>
+
+  <div role="radiogroup" aria-label="How to add the recipe" style="margin: 16px 20px 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+    <sc-for list="{{modes}}" as="m" hint-placeholder-count="4">
+      <button type="button" role="radio" aria-checked="{{m.checkedStr}}" onClick="{{m.pick}}" style="min-height: 92px; padding: 12px; border-radius: 14px; border: {{m.border}}; background: {{m.bg}}; color: #1a1a1a; font: inherit; text-align: left; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; cursor: pointer">
+        <span style="width: 36px; height: 36px; border-radius: 10px; background: {{m.iconBg}}; color: {{m.iconFg}}; display: flex; align-items: center; justify-content: center">
+          <sc-if value="{{m.isManual}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg></sc-if>
+          <sc-if value="{{m.isPaste}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="4" width="12" height="17" rx="2"/><path d="M9 4h6v3H9z"/></svg></sc-if>
+          <sc-if value="{{m.isFile}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6v18h12V7z"/><path d="M14 3v4h4"/></svg></sc-if>
+          <sc-if value="{{m.isUrl}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg></sc-if>
+        </span>
+        <span style="display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 15px; font-weight: 700">{{m.title}}</span>
+          <span style="font-size: 12px; color: #5c5750">{{m.sub}}</span>
+        </span>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="margin: 16px 20px 0; padding: 16px; background: #ffffff; border: 1px solid #e6dcc0; border-radius: 14px; display: flex; flex-direction: column; gap: 12px">
+    <sc-if value="{{isUrl}}" hint-placeholder-val="{{true}}">
+      <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 700">
+        Recipe page URL
+        <input type="url" placeholder="https://example.com/recipes/chili" style="height: 48px; padding: 0 12px; border: 1px solid #d9cba6; border-radius: 10px; background: #ffffff; font: inherit; font-size: 16px; font-weight: 400; color: #1a1a1a">
+      </label>
+      <span style="font-size: 12px; color: #5c5750; line-height: 1.4">Works best with recipe sites that publish structured recipe data.</span>
+      <a href="RecipeForm.dc.html" style="height: 50px; border-radius: 12px; background: #a71930; color: #ffffff; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700">Fetch recipe</a>
+    </sc-if>
+    <sc-if value="{{isPaste}}" hint-placeholder-val="{{false}}">
+      <label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 700">
+        Paste the recipe text
+        <textarea rows="7" placeholder="Recipe name&#10;Ingredients&#10;2 cups flour&#10;1 tsp salt" style="padding: 10px 12px; border: 1px solid #d9cba6; border-radius: 10px; background: #ffffff; font: inherit; font-size: 16px; font-weight: 400; color: #1a1a1a; resize: none"></textarea>
+      </label>
+      <a href="RecipeForm.dc.html" style="height: 50px; border-radius: 12px; background: #a71930; color: #ffffff; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700">Extract ingredients</a>
+    </sc-if>
+    <sc-if value="{{isFile}}" hint-placeholder-val="{{false}}">
+      <label style="min-height: 150px; border: 2px dashed #d9cba6; border-radius: 12px; background: #fbf7ec; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; padding: 16px; cursor: pointer">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#a71930" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v4h16v-4"/></svg>
+        <span style="font-size: 15px; font-weight: 700">Choose a file or take a photo</span>
+        <span style="font-size: 12px; color: #5c5750">.txt, .md, .pdf, or an image</span>
+        <input type="file" accept=".txt,.md,.pdf,image/*" style="position: absolute; width: 1px; height: 1px; opacity: 0">
+      </label>
+    </sc-if>
+    <sc-if value="{{isManual}}" hint-placeholder-val="{{false}}">
+      <span style="font-size: 14px; line-height: 1.45">Start with a blank recipe and add the name, servings, tags, and ingredients yourself.</span>
+      <a href="RecipeForm.dc.html" style="height: 50px; border-radius: 12px; background: #a71930; color: #ffffff; text-decoration: none; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700">Start a blank recipe</a>
+    </sc-if>
+  </div>
+
+  <nav aria-label="Primary" style="position: absolute; left: 0; right: 0; bottom: 0; height: 78px; background: #ffffff; border-top: 1px solid #d9cba6; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding-bottom: 10px; box-sizing: border-box">
+    <a href="Main.dc.html" aria-current="page" style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #a71930; font-size: 12px; font-weight: 700">
+      <span style="position: absolute; top: 0; width: 36px; height: 3px; border-radius: 0 0 3px 3px; background: #a71930"></span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>
+      Recipes
+    </a>
+    <a href="ThisWeek.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+      This Week
+    </a>
+    <a href="Groceries.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>
+      Groceries
+    </a>
+    <a href="Settings.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+      Settings
+    </a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { mode: 'url' };
+  }
+  renderVals() {
+    var self = this;
+    var mode = this.state.mode;
+    var defs = [
+      { id: 'url', title: 'From a web page', sub: 'Paste a recipe link' },
+      { id: 'paste', title: 'Paste text', sub: 'From an email or note' },
+      { id: 'file', title: 'Upload a file', sub: 'PDF, text, or photo' },
+      { id: 'manual', title: 'Type it in', sub: 'Start from blank' }
+    ];
+    return {
+      isUrl: mode === 'url',
+      isPaste: mode === 'paste',
+      isFile: mode === 'file',
+      isManual: mode === 'manual',
+      modes: defs.map(function (d) {
+        var on = d.id === mode;
+        return Object.assign({}, d, {
+          isUrl: d.id === 'url', isPaste: d.id === 'paste', isFile: d.id === 'file', isManual: d.id === 'manual',
+          checkedStr: on ? 'true' : 'false',
+          border: on ? '2px solid #a71930' : '1px solid #e6dcc0',
+          bg: on ? '#ffffff' : '#fbf7ec',
+          iconBg: on ? '#a71930' : '#e3d4ad',
+          iconFg: on ? '#ffffff' : '#1a1a1a',
+          pick: function () { self.setState({ mode: d.id }); }
+        });
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

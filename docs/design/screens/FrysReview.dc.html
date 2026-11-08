@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MealFlow Fry's product review</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0b6b73}a:hover{color:#7d1223}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #f7f1e2; color: #1a1a1a; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <header style="padding: 16px 12px 0; display: flex; align-items: center; gap: 4px">
+    <a href="Groceries.dc.html" aria-label="Back to grocery list" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #1a1a1a; text-decoration: none">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>
+    </a>
+    <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 30px; line-height: 1">Fry’s products</h1>
+  </header>
+
+  <ol aria-label="Shopping steps" style="list-style: none; margin: 12px 20px 0; padding: 6px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; background: #ffffff; border: 1px solid #e6dcc0; border-radius: 14px">
+    <li style="display: flex"><a href="ThisWeek.dc.html" style="flex: 1; height: 36px; border-radius: 10px; color: #0b6b73; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 700"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Plan</a></li>
+    <li style="display: flex"><a href="Groceries.dc.html" style="flex: 1; height: 36px; border-radius: 10px; color: #0b6b73; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 700"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>List</a></li>
+    <li style="display: flex"><a href="FrysReview.dc.html" aria-current="step" style="flex: 1; height: 36px; border-radius: 10px; background: #a71930; color: #ffffff; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 700"><span style="width: 20px; height: 20px; border-radius: 10px; background: #ffffff; color: #a71930; font-size: 12px; display: flex; align-items: center; justify-content: center">3</span>Fry’s cart</a></li>
+  </ol>
+
+  <div style="margin: 10px 20px 0; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 13px; color: #5c5750">
+    <span style="display: flex; align-items: center; gap: 6px">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.5 7-12a7 7 0 0 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      [Your home store]
+    </span>
+    <a href="Settings.dc.html" style="font-weight: 600; color: #0b6b73; text-decoration: none">Change store</a>
+  </div>
+
+  <sc-if value="{{hasReview}}" hint-placeholder-val="{{true}}">
+    <div role="status" style="margin: 10px 20px 0; padding: 10px 12px; border-radius: 12px; border: 1px solid #c98a12; background: #fdf0d5; color: #6b4200; display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5h.01"/></svg>
+      {{reviewLabel}}
+    </div>
+  </sc-if>
+
+  <ul style="list-style: none; margin: 10px 0 0; padding: 0 20px 260px; display: flex; flex-direction: column; gap: 10px; overflow: hidden">
+    <sc-for list="{{lines}}" as="l" hint-placeholder-count="4">
+      <li style="background: #ffffff; border: {{l.cardBorder}}; border-radius: 14px; padding: 12px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 1px 2px rgba(0,0,0,0.05)">
+
+        <span style="display: flex; gap: 12px; align-items: flex-start">
+          <span role="img" aria-label="{{l.imageAlt}}" style="width: 56px; height: 56px; flex: none; border-radius: 10px; background: #fbf7ec; border: 1px solid #e6dcc0; color: #a89c80; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 9px; font-weight: 600">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5-9 8"/></svg>
+            {{l.imageNote}}
+          </span>
+          <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+            <span style="display: flex; align-items: baseline; justify-content: space-between; gap: 8px">
+              <span style="font-size: 15px; font-weight: 700">{{l.name}}</span>
+              <span style="font-size: 12px; color: #5c5750; white-space: nowrap">Need {{l.need}}</span>
+            </span>
+            <sc-if value="{{l.matched}}" hint-placeholder-val="{{true}}">
+              <span style="font-size: 13px; line-height: 1.35">{{l.chosenLabel}}</span>
+              <span style="display: flex; align-items: center; gap: 8px">
+                <span style="font-size: 14px; font-weight: 700">{{l.chosenPrice}}</span>
+                <sc-if value="{{l.remembered}}" hint-placeholder-val="{{false}}">
+                  <span style="background: #dff4f5; color: #0b6b73; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 700">Remembered</span>
+                </sc-if>
+              </span>
+            </sc-if>
+          </span>
+        </span>
+
+        <sc-if value="{{l.unmatched}}" hint-placeholder-val="{{false}}">
+          <span style="display: flex; align-items: flex-start; gap: 8px; padding: 10px; border-radius: 10px; background: #f6e3e2; color: #7d1223; font-size: 13px; font-weight: 600">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg>
+            No Fry’s product found. Add this one in the Fry’s app.
+          </span>
+        </sc-if>
+
+        <sc-if value="{{l.matched}}" hint-placeholder-val="{{true}}">
+          <span style="display: flex; align-items: center; gap: 10px">
+            <sc-if value="{{l.auto}}" hint-placeholder-val="{{true}}">
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 13px; font-weight: 700; color: #0b6b73; display: flex; align-items: center; gap: 4px">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>
+                  {{l.suggestLabel}}
+                </span>
+                <span style="font-size: 12px; color: #5c5750">{{l.mathLabel}}</span>
+              </span>
+            </sc-if>
+            <sc-if value="{{l.manual}}" hint-placeholder-val="{{false}}">
+              <span style="flex: 1; min-width: 0; padding: 8px 10px; border-radius: 10px; background: #fdf0d5; border: 1px solid #c98a12; color: #6b4200; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 12px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; display: flex; align-items: center; gap: 4px">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 16.5h.01"/></svg>
+                  Manual review
+                </span>
+                <span style="font-size: 12px; line-height: 1.35">{{l.reviewReason}}</span>
+              </span>
+            </sc-if>
+            <sc-if value="{{l.reviewed}}" hint-placeholder-val="{{false}}">
+              <span style="flex: 1; min-width: 0; padding: 8px 10px; border-radius: 10px; background: #eef8f8; border: 1px solid #0b6b73; color: #0b6b73; display: flex; flex-direction: column; gap: 2px">
+                <span style="font-size: 12px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; display: flex; align-items: center; gap: 4px">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>
+                  Reviewed
+                </span>
+                <span style="font-size: 12px; line-height: 1.35; color: #1a1a1a">{{l.reviewedNote}}</span>
+              </span>
+            </sc-if>
+            <span style="display: flex; align-items: center; gap: 2px; border: 1px solid #d9cba6; border-radius: 12px; background: #fbf7ec; flex: none">
+              <button type="button" onClick="{{l.dec}}" aria-label="Decrease {{l.name}} quantity" style="width: 40px; height: 44px; border: 0; background: transparent; color: #1a1a1a; display: flex; align-items: center; justify-content: center; cursor: pointer">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg>
+              </button>
+              <span style="min-width: 22px; text-align: center; font-weight: 700; font-size: 17px">{{l.qty}}</span>
+              <button type="button" onClick="{{l.inc}}" aria-label="Increase {{l.name}} quantity" style="width: 40px; height: 44px; border: 0; background: transparent; color: #1a1a1a; display: flex; align-items: center; justify-content: center; cursor: pointer">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+              </button>
+            </span>
+          </span>
+          <sc-if value="{{l.adjusted}}" hint-placeholder-val="{{false}}">
+            <span style="font-size: 12px; color: #5c5750; display: flex; align-items: center; gap: 6px">
+              Changed from the suggested {{l.suggested}}.
+              <button type="button" onClick="{{l.reset}}" style="height: 32px; padding: 0 4px; border: 0; background: transparent; color: #0b6b73; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer">Use suggestion</button>
+            </span>
+          </sc-if>
+
+          <button type="button" onClick="{{l.toggleOpen}}" aria-expanded="{{l.openStr}}" style="align-self: flex-start; height: 36px; padding: 0 2px; border: 0; background: transparent; color: #0b6b73; font: inherit; font-size: 13px; font-weight: 700; cursor: pointer">{{l.openLabel}}</button>
+          <sc-if value="{{l.open}}" hint-placeholder-val="{{false}}">
+            <span role="radiogroup" aria-label="Choose a product for {{l.name}}" style="display: flex; flex-direction: column; gap: 6px">
+              <sc-for list="{{l.options}}" as="o" hint-placeholder-count="3">
+                <button type="button" role="radio" aria-checked="{{o.checkedStr}}" onClick="{{o.pick}}" style="min-height: 56px; padding: 8px 10px; border-radius: 10px; border: {{o.border}}; background: {{o.bg}}; color: #1a1a1a; font: inherit; font-size: 13px; text-align: left; display: flex; align-items: center; gap: 10px; cursor: pointer">
+                  <span style="width: 18px; height: 18px; flex: none; border-radius: 9px; border: 2px solid {{o.ring}}; box-sizing: border-box; display: flex; align-items: center; justify-content: center"><span style="width: 8px; height: 8px; border-radius: 4px; background: {{o.dot}}"></span></span>
+                  <span style="width: 36px; height: 36px; flex: none; border-radius: 8px; background: #fbf7ec; border: 1px solid #e6dcc0; color: #a89c80; display: flex; align-items: center; justify-content: center" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5-9 8"/></svg>
+                  </span>
+                  <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+                    <span>{{o.label}}</span>
+                    <span style="font-size: 12px; font-weight: 600; color: {{o.fitColor}}">{{o.fit}}</span>
+                  </span>
+                  <span style="font-weight: 700">{{o.price}}</span>
+                </button>
+              </sc-for>
+              <span style="font-size: 12px; color: #5c5750">MealFlow remembers your pick for every recipe that uses this ingredient.</span>
+            </span>
+          </sc-if>
+        </sc-if>
+      </li>
+    </sc-for>
+  </ul>
+
+  <div style="position: absolute; left: 0; right: 0; bottom: 78px; padding: 12px 16px; background: #ffffff; border-top: 1px solid #d9cba6; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 -6px 16px rgba(0,0,0,0.06)">
+    <span style="display: flex; align-items: baseline; justify-content: space-between">
+      <span style="font-size: 14px; color: #5c5750">Estimated total</span>
+      <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 28px; line-height: 1">{{total}}</span>
+    </span>
+    <span style="font-size: 12px; color: #5c5750; line-height: 1.4">{{footNote}}</span>
+    <a href="CartResult.dc.html" style="height: 52px; border-radius: 12px; background: #a71930; color: #ffffff; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 700">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M3 4h2l2.5 11h11L21 8H7"/></svg>
+      Add {{addCount}} items to Fry’s cart
+    </a>
+  </div>
+
+  <nav aria-label="Primary" style="position: absolute; left: 0; right: 0; bottom: 0; height: 78px; background: #ffffff; border-top: 1px solid #d9cba6; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding-bottom: 10px; box-sizing: border-box">
+    <a href="Main.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>
+      Recipes
+    </a>
+    <a href="ThisWeek.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+      This Week
+    </a>
+    <a href="Groceries.dc.html" aria-current="page" style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #a71930; font-size: 12px; font-weight: 700">
+      <span style="position: absolute; top: 0; width: 36px; height: 3px; border-radius: 0 0 3px 3px; background: #a71930"></span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>
+      Groceries
+    </a>
+    <a href="Settings.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+      Settings
+    </a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { open: 'onion', chosen: {}, qty: {} };
+  }
+  renderVals() {
+    var self = this;
+    // Unit families. Only same-family amounts convert automatically; everything else is manual review.
+    var BASE = { oz: ['mass', 1], lb: ['mass', 16], cup: ['volume', 8], 'fl oz': ['volume', 1], ct: ['count', 1], can: ['count', 1], clove: ['clove', 1] };
+    var NAMES = { mass: 'weight', volume: 'volume', count: 'a count', clove: 'cloves' };
+    function fmt(n) { return String(Math.round(n * 100) / 100); }
+    function fit(need, pack) {
+      var a = BASE[need.u], b = BASE[pack.u];
+      if (!a || !b || a[0] !== b[0]) {
+        return { ok: false, reason: 'Recipe needs ' + fmt(need.q) + ' ' + need.u + ', pack is ' + fmt(pack.q) + ' ' + pack.u + '. ' + (a && b ? 'Can’t convert ' + NAMES[a[0]] + ' to ' + NAMES[b[0]] + ' automatically.' : 'Units can’t be compared.') + ' Set the quantity yourself.' };
+      }
+      var packs = Math.ceil((need.q * a[1]) / (pack.q * b[1]) - 1e-9);
+      return { ok: true, packs: Math.max(1, packs), math: fmt(need.q) + ' ' + need.u + ' needed ÷ ' + fmt(pack.q) + ' ' + pack.u + ' per pack, rounded up' };
+    }
+    var data = [
+      { id: 'chicken', name: 'Chicken breast', need: { q: 3.5, u: 'lb' }, remembered: true, options: [
+        { id: 'a', label: 'Kroger · Boneless Skinless Chicken Breast · 3 lb', size: { q: 3, u: 'lb' }, price: 8.97 },
+        { id: 'b', label: 'Simple Truth · Boneless Skinless Chicken Breasts · 1.5 lb', size: { q: 1.5, u: 'lb' }, price: 7.49 },
+        { id: 'c', label: 'Kroger · Chicken Breast Tenderloins · 2 lb', size: { q: 2, u: 'lb' }, price: 6.99 }
+      ] },
+      { id: 'onion', name: 'Yellow onion', need: { q: 3, u: 'ct' }, remembered: true, options: [
+        { id: 'a', label: 'Kroger · Yellow Onions · 3 lb bag', size: { q: 3, u: 'lb' }, price: 2.99 },
+        { id: 'b', label: 'Yellow Onion · 1 ct', size: { q: 1, u: 'ct' }, price: 0.99 }
+      ] },
+      { id: 'cheese', name: 'Monterey Jack cheese', need: { q: 3, u: 'cup' }, remembered: false, options: [
+        { id: 'a', label: 'Kroger · Shredded Monterey Jack · 8 oz', size: { q: 8, u: 'oz' }, price: 2.79 }
+      ] },
+      { id: 'beans', name: 'Kidney beans', need: { q: 2, u: 'can' }, unmatched: true, options: [] },
+      { id: 'turkey', name: 'Ground turkey', need: { q: 2, u: 'lb' }, remembered: false, options: [
+        { id: 'a', label: 'Kroger · 93% Lean Ground Turkey · 1 lb', size: { q: 1, u: 'lb' }, price: 4.49 },
+        { id: 'b', label: 'Simple Truth · Ground Turkey · 1 lb', size: { q: 1, u: 'lb' }, price: 5.29 }
+      ] },
+      { id: 'garlic', name: 'Garlic', need: { q: 7, u: 'clove' }, remembered: true, options: [
+        { id: 'a', label: 'Garlic Bulb · 1 ct', size: { q: 1, u: 'ct' }, price: 0.69 }
+      ] }
+    ];
+    var chosen = this.state.chosen;
+    var qty = this.state.qty;
+    var total = 0, addCount = 0, reviewCount = 0;
+    function money(v) { return '$' + v.toFixed(2); }
+    var lines = data.map(function (l) {
+      var needText = fmt(l.need.q) + ' ' + l.need.u;
+      if (l.unmatched) {
+        return { name: l.name, need: needText, unmatched: true, matched: false, imageAlt: 'No product image', imageNote: 'No match', cardBorder: '1px solid #e6dcc0', options: [] };
+      }
+      var pickId = chosen[l.id] || 'a';
+      var pick = l.options.filter(function (o) { return o.id === pickId; })[0];
+      var f = fit(l.need, pick.size);
+      var suggested = f.ok ? f.packs : 1;
+      var q = qty[l.id] != null ? qty[l.id] : suggested;
+      var reviewed = !f.ok && qty[l.id] != null;
+      if (!f.ok && !reviewed) reviewCount += 1;
+      total += pick.price * q;
+      addCount += 1;
+      var open = self.state.open === l.id;
+      function setQty(n) { var m = Object.assign({}, self.state.qty); m[l.id] = n; self.setState({ qty: m }); }
+      return {
+        name: l.name,
+        need: needText,
+        unmatched: false,
+        matched: true,
+        imageAlt: pick.label,
+        imageNote: '[Fry’s image]',
+        cardBorder: f.ok || reviewed ? '1px solid #e6dcc0' : '2px solid #c98a12',
+        remembered: Boolean(l.remembered) && !chosen[l.id],
+        chosenLabel: pick.label,
+        chosenPrice: money(pick.price) + (q > 1 ? ' × ' + q + ' = ' + money(pick.price * q) : ''),
+        auto: f.ok,
+        manual: !f.ok && !reviewed,
+        reviewed: reviewed,
+        reviewedNote: reviewed ? 'You set this quantity. Recipe needs ' + needText + ', pack is ' + fmt(pick.size.q) + ' ' + pick.size.u + '.' : '',
+        suggestLabel: f.ok ? 'Suggested ' + suggested + (suggested === 1 ? ' pack' : ' packs') : '',
+        mathLabel: f.ok ? f.math : '',
+        reviewReason: f.ok ? '' : f.reason,
+        suggested: suggested,
+        adjusted: f.ok && q !== suggested,
+        reset: function () { var m = Object.assign({}, self.state.qty); delete m[l.id]; self.setState({ qty: m }); },
+        qty: q,
+        inc: function () { setQty(q + 1); },
+        dec: function () { setQty(Math.max(1, q - 1)); },
+        open: open,
+        openStr: open ? 'true' : 'false',
+        openLabel: open ? 'Done choosing' : (l.options.length > 1 ? 'Change product (' + l.options.length + ' options)' : 'Only one match found'),
+        toggleOpen: function () { self.setState({ open: open ? null : l.id }); },
+        options: l.options.map(function (o) {
+          var on = o.id === pickId;
+          var of = fit(l.need, o.size);
+          return {
+            label: o.label,
+            price: money(o.price),
+            fit: of.ok ? 'Suggested ' + of.packs + (of.packs === 1 ? ' pack' : ' packs') : 'Needs manual review',
+            fitColor: of.ok ? '#0b6b73' : '#6b4200',
+            checkedStr: on ? 'true' : 'false',
+            border: on ? '2px solid #0b6b73' : '1px solid #e6dcc0',
+            bg: on ? '#eef8f8' : '#ffffff',
+            ring: on ? '#0b6b73' : '#a89c80',
+            dot: on ? '#0b6b73' : 'transparent',
+            pick: function () {
+              var n = Object.assign({}, self.state.chosen); n[l.id] = o.id;
+              var m = Object.assign({}, self.state.qty); delete m[l.id];
+              self.setState({ chosen: n, qty: m });
+            }
+          };
+        })
+      };
+    });
+    return {
+      lines: lines,
+      total: money(total),
+      addCount: addCount,
+      hasReview: reviewCount > 0,
+      reviewLabel: reviewCount === 1 ? '1 item needs manual review before you add it' : reviewCount + ' items need manual review before you add them',
+      footNote: reviewCount > 0
+        ? 'Pack counts are rounded up from your recipes. Items marked Manual review start at 1 and change to Reviewed once you set the quantity.'
+        : 'Pack counts are rounded up from your recipes. Change any of them before adding.'
+    };
+  }
+}
+</script>
+</body>
+</html>

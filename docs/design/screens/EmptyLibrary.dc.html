@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MealFlow empty library</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0b6b73}a:hover{color:#7d1223}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #f7f1e2; color: #1a1a1a; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <header style="padding: 22px 20px 6px; display: flex; flex-direction: column">
+    <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 32px; line-height: 1; color: #a71930; letter-spacing: 0.01em">MealFlow</span>
+    <span style="font-size: 13px; color: #5c5750; margin-top: 4px">[Household name]</span>
+  </header>
+
+  <div style="margin: 40px 20px 0; padding: 36px 24px; border-radius: 20px; background: #ffffff; border: 1px solid #e6dcc0; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center">
+    <span style="position: relative; width: 112px; height: 112px; border-radius: 56px; background: #e3d4ad; display: flex; align-items: center; justify-content: center">
+      <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#a71930" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/><path d="M10 8h5"/></svg>
+      <span style="position: absolute; right: 2px; bottom: 6px; width: 34px; height: 34px; border-radius: 17px; background: #a71930; color: #ffffff; border: 3px solid #ffffff; display: flex; align-items: center; justify-content: center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+      </span>
+    </span>
+    <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 30px; line-height: 1.05">Your recipe library is empty</h1>
+    <p style="margin: 0; font-size: 15px; color: #5c5750; line-height: 1.45">Add the meals your household makes most. Then pick a few each week and MealFlow builds the grocery list.</p>
+    <span style="width: 100%; display: flex; flex-direction: column; gap: 10px; margin-top: 6px">
+      <a href="AddRecipe.dc.html" style="height: 52px; border-radius: 12px; background: #a71930; color: #ffffff; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 700">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg>
+        Import a recipe
+      </a>
+      <a href="RecipeForm.dc.html" style="height: 52px; border-radius: 12px; border: 1px solid #d9cba6; background: #ffffff; color: #1a1a1a; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 600">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9l-4-4L4 16z"/></svg>
+        Type one in
+      </a>
+    </span>
+  </div>
+
+  <ol style="list-style: none; margin: 28px 28px 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; text-align: center">
+    <li style="display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #5c5750"><span style="width: 28px; height: 28px; border-radius: 14px; background: #a71930; color: #ffffff; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">1</span>Add recipes</li>
+    <li style="display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #5c5750"><span style="width: 28px; height: 28px; border-radius: 14px; border: 2px solid #a71930; box-sizing: border-box; color: #a71930; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">2</span>Plan the week</li>
+    <li style="display: flex; flex-direction: column; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: #5c5750"><span style="width: 28px; height: 28px; border-radius: 14px; border: 2px solid #a71930; box-sizing: border-box; color: #a71930; font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center">3</span>Fill the Fry’s cart</li>
+  </ol>
+
+  <nav aria-label="Primary" style="position: absolute; left: 0; right: 0; bottom: 0; height: 78px; background: #ffffff; border-top: 1px solid #d9cba6; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding-bottom: 10px; box-sizing: border-box">
+    <a href="Main.dc.html" aria-current="page" style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #a71930; font-size: 12px; font-weight: 700">
+      <span style="position: absolute; top: 0; width: 36px; height: 3px; border-radius: 0 0 3px 3px; background: #a71930"></span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>
+      Recipes
+    </a>
+    <a href="ThisWeek.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+      This Week
+    </a>
+    <a href="Groceries.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>
+      Groceries
+    </a>
+    <a href="Settings.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+      Settings
+    </a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

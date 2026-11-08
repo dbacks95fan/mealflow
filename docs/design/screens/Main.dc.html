@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MealFlow recipes library</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#0b6b73}a:hover{color:#7d1223}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #f7f1e2; color: #1a1a1a; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+
+  <header style="padding: 22px 20px 6px; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+    <div style="display: flex; flex-direction: column; gap: 0">
+      <span style="font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 32px; line-height: 1; color: #a71930; letter-spacing: 0.01em">MealFlow</span>
+      <span style="font-size: 13px; color: #5c5750; margin-top: 4px">[Household name]</span>
+    </div>
+    <a href="AddRecipe.dc.html" aria-label="Add a recipe" style="width: 48px; height: 48px; border-radius: 14px; background: #a71930; color: #ffffff; display: flex; align-items: center; justify-content: center; text-decoration: none">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+    </a>
+  </header>
+
+  <div style="padding: 10px 20px 4px; display: flex; flex-direction: column; gap: 12px">
+    <h1 style="margin: 0; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 26px; line-height: 1.1">Recipes</h1>
+    <label style="display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 14px; background: #ffffff; border: 1px solid #d9cba6; border-radius: 12px; color: #5c5750">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search recipes</span>
+      <input type="search" value="{{query}}" onChange="{{onQuery}}" placeholder="Search recipes or tags" style="flex: 1; min-width: 0; border: 0; outline: none; background: transparent; font: inherit; font-size: 16px; color: #1a1a1a">
+    </label>
+    <div style="display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: #5c5750">
+      <span>{{countLabel}}</span>
+      <a href="ThisWeek.dc.html" style="font-weight: 600; color: #0b6b73; text-decoration: none">{{weekLabel}}</a>
+    </div>
+  </div>
+
+  <ul style="list-style: none; margin: 0; padding: 8px 20px 180px; display: flex; flex-direction: column; gap: 10px; overflow: hidden">
+    <sc-for list="{{recipes}}" as="r" hint-placeholder-count="5">
+      <li style="background: #ffffff; border: 1px solid #e6dcc0; border-radius: 14px; padding: 14px 14px 14px 16px; display: flex; align-items: center; gap: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.05)">
+        <a href="RecipeDetail.dc.html" style="flex: 1; min-width: 0; text-decoration: none; color: #1a1a1a; display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 16px; font-weight: 700; line-height: 1.25">{{r.name}}</span>
+          <span style="font-size: 13px; color: #5c5750">{{r.meta}}</span>
+          <span style="display: flex; flex-wrap: wrap; gap: 6px">
+            <sc-for list="{{r.tags}}" as="t" hint-placeholder-count="2">
+              <span style="background: #e3d4ad; border-radius: 999px; padding: 2px 9px; font-size: 12px; font-weight: 600; color: #1a1a1a">{{t}}</span>
+            </sc-for>
+          </span>
+        </a>
+        <sc-if value="{{r.inWeek}}" hint-placeholder-val="{{false}}">
+          <button type="button" onClick="{{r.toggle}}" aria-pressed="true" aria-label="Remove {{r.name}} from this week" style="flex: none; min-width: 48px; height: 48px; padding: 0 12px; border-radius: 12px; border: 0; background: #0b6b73; color: #ffffff; font: inherit; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>
+            Week
+          </button>
+        </sc-if>
+        <sc-if value="{{r.notInWeek}}" hint-placeholder-val="{{true}}">
+          <button type="button" onClick="{{r.toggle}}" aria-pressed="false" aria-label="Add {{r.name}} to this week" style="flex: none; min-width: 48px; height: 48px; padding: 0 12px; border-radius: 12px; border: 1px solid #d9cba6; background: #ffffff; color: #1a1a1a; font: inherit; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Week
+          </button>
+        </sc-if>
+      </li>
+    </sc-for>
+    <sc-if value="{{noMatches}}" hint-placeholder-val="{{false}}">
+      <li style="padding: 24px 8px; text-align: center; color: #5c5750; font-size: 15px">No recipes match “{{query}}”.</li>
+    </sc-if>
+  </ul>
+
+  <sc-if value="{{hasWeek}}" hint-placeholder-val="{{true}}">
+    <div style="position: absolute; left: 12px; right: 12px; bottom: 88px; background: #1a1a1a; color: #ffffff; border-radius: 16px; padding: 10px 10px 10px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.25)">
+      <span style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 15px; font-weight: 700">{{weekLabel}}</span>
+        <span style="font-size: 12px; color: #e3d4ad">Ready to build a grocery list</span>
+      </span>
+      <a href="ThisWeek.dc.html" style="height: 44px; padding: 0 16px; border-radius: 11px; background: #a71930; color: #ffffff; text-decoration: none; font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 6px">
+        Review week
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+  </sc-if>
+
+  <nav aria-label="Primary" style="position: absolute; left: 0; right: 0; bottom: 0; height: 78px; background: #ffffff; border-top: 1px solid #d9cba6; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding-bottom: 10px; box-sizing: border-box">
+    <a href="Main.dc.html" aria-current="page" style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #a71930; font-size: 12px; font-weight: 700">
+      <span style="position: absolute; top: 0; width: 36px; height: 3px; border-radius: 0 0 3px 3px; background: #a71930"></span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/></svg>
+      Recipes
+    </a>
+    <a href="ThisWeek.dc.html" style="position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+      This Week
+      <sc-if value="{{hasWeek}}" hint-placeholder-val="{{true}}">
+        <span style="position: absolute; top: 8px; left: 50%; margin-left: 6px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 9px; background: #a71930; color: #ffffff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{weekCount}}</span>
+      </sc-if>
+    </a>
+    <a href="Groceries.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>
+      Groceries
+    </a>
+    <a href="Settings.dc.html" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #5c5750; font-size: 12px; font-weight: 600">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+      Settings
+    </a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { query: '', week: { 1: true, 2: true, 3: true } };
+  }
+  renderVals() {
+    var all = [
+      { id: 1, name: 'Green Chile Chicken Enchiladas', meta: '11 ingredients · serves 6', tags: ['dinner', 'mexican'] },
+      { id: 2, name: 'Turkey Chili', meta: '9 ingredients · serves 8', tags: ['dinner', 'slow cooker'] },
+      { id: 3, name: 'Sheet Pan Chicken Fajitas', meta: '10 ingredients · serves 4', tags: ['dinner', 'weeknight'] },
+      { id: 4, name: 'Lemon Garlic Pasta', meta: '7 ingredients · serves 4', tags: ['dinner', 'vegetarian'] },
+      { id: 5, name: 'Overnight Oats', meta: '6 ingredients · serves 2', tags: ['breakfast'] },
+      { id: 6, name: 'Carne Asada Tacos', meta: '12 ingredients · serves 6', tags: ['dinner', 'grill'] }
+    ];
+    var self = this;
+    var q = (this.state.query || '').trim().toLowerCase();
+    var week = this.state.week;
+    var shown = all.filter(function (r) {
+      if (!q) return true;
+      return r.name.toLowerCase().indexOf(q) >= 0 || r.tags.some(function (t) { return t.toLowerCase().indexOf(q) >= 0; });
+    }).map(function (r) {
+      var inWeek = Boolean(week[r.id]);
+      return Object.assign({}, r, {
+        inWeek: inWeek,
+        notInWeek: !inWeek,
+        toggle: function () {
+          var next = Object.assign({}, self.state.week);
+          if (next[r.id]) { delete next[r.id]; } else { next[r.id] = true; }
+          self.setState({ week: next });
+        }
+      });
+    });
+    var count = Object.keys(week).length;
+    return {
+      query: this.state.query,
+      onQuery: function (e) { self.setState({ query: e.target.value }); },
+      recipes: shown,
+      noMatches: shown.length === 0,
+      countLabel: all.length + ' recipes',
+      weekCount: count,
+      hasWeek: count > 0,
+      weekLabel: count === 1 ? '1 recipe this week' : count + ' recipes this week'
+    };
+  }
+}
+</script>
+</body>
+</html>
