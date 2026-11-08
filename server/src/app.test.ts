@@ -19,6 +19,15 @@ describe("app", () => {
     expect(res.headers["content-security-policy"]).not.toContain("upgrade-insecure-requests");
   });
 
+  it("allows Fry's product images from Kroger's image host and nowhere else", async () => {
+    const res = await request(createApp()).get("/health");
+    const imgSrc = (res.headers["content-security-policy"] as string)
+      .split(";")
+      .map((d) => d.trim())
+      .find((d) => d.startsWith("img-src"));
+    expect(imgSrc).toBe("img-src 'self' data: https://www.kroger.com");
+  });
+
   it("returns a JSON 404 for an unknown /api route", async () => {
     const res = await request(createApp()).get("/api/nope");
     expect(res.status).toBe(404);

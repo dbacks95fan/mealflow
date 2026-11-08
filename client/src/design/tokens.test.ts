@@ -63,7 +63,7 @@ const PAIRS: Array<[string, string, number]> = [
   ["--mf-tag-text", "--mf-tag-bg", TEXT],
   ["--mf-info-text", "--mf-info-bg", TEXT],
   ["--mf-warn-text", "--mf-warn-bg", TEXT],
-  ["--mf-error-text", "--mf-error-bg", TEXT],
+  ["--mf-warn-text", "--mf-surface", TEXT], // "Needs manual review" in the product list  ["--mf-error-text", "--mf-error-bg", TEXT],
   ["--mf-error-text", "--mf-surface", TEXT],
   ["--mf-text", "--mf-error-bg", TEXT],
   ["--mf-primary-text", "--mf-error-bg", TEXT],

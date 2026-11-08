@@ -578,6 +578,153 @@ legend {
   margin: var(--mf-space-2) 0;
 }
 
+/* Fry's review screen (INT-MF-0005) */
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: var(--mf-space-1);
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--mf-touch);
+  height: var(--mf-touch);
+  margin-left: calc(-1 * var(--mf-space-3));
+  color: var(--mf-text);
+  border-radius: var(--mf-radius-sm);
+}
+
+.back-link:hover {
+  background: var(--mf-surface-2);
+}
+
+.store-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-2);
+}
+
+.store-name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mf-space-1);
+}
+
+.store-line a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--mf-touch);
+  font-weight: 600;
+}
+
+.frys-item-head {
+  display: flex;
+  gap: var(--mf-space-3);
+  align-items: flex-start;
+}
+
+.frys-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.frys-brand {
+  font-weight: 700;
+}
+
+.frys-price {
+  font-weight: 700;
+}
+
+.frys-item-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mf-space-3);
+  margin: var(--mf-space-2) 0;
+}
+
+.product-image {
+  flex: none;
+  object-fit: contain;
+  border-radius: var(--mf-radius-sm);
+  border: 1px solid var(--mf-border);
+  background: #ffffff;
+}
+
+.product-image.placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--mf-muted);
+  background: var(--mf-surface-2);
+}
+
+.chip {
+  align-self: flex-start;
+  margin-top: var(--mf-space-1);
+  padding: 0.1rem 0.6rem;
+  border-radius: var(--mf-radius-pill);
+  background: var(--mf-tag-bg);
+  color: var(--mf-tag-text);
+  font-size: var(--mf-text-xs);
+  font-weight: 700;
+}
+
+button.change-product {
+  width: 100%;
+}
+
+.product-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-2);
+  margin: var(--mf-space-2) 0 0;
+  padding: var(--mf-space-3);
+}
+
+.product-option {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: var(--mf-space-2);
+  min-height: var(--mf-touch);
+  max-width: none;
+  padding: var(--mf-space-2);
+  border: 1px solid var(--mf-border);
+  border-radius: var(--mf-radius);
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.product-option:has(input:checked) {
+  border: 2px solid var(--mf-selected);
+}
+
+.product-option-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: var(--mf-text-sm);
+}
+
+.fit-manual {
+  color: var(--mf-warn-text);
+  font-weight: 700;
+}
+
+.action-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--mf-text-lg);
+}
+
 /* A text-styled button, for secondary actions inside a sentence. */
 button.link-button {
   min-width: 0;

@@ -17,6 +17,16 @@ function card(page: Page, name: string) {
   return page.locator(".card", { has: page.locator("strong", { hasText: new RegExp(`^${name}$`) }) });
 }
 
+async function chooseOption(page: Page, name: string, index: number) {
+  const item = card(page, name);
+  await item.getByRole("button", { name: /Change product/ }).click();
+  await item.getByRole("radio").nth(index).check();
+}
+
+function total(page: Page) {
+  return page.locator(".action-total");
+}
+
 function stepperValue(page: Page, name: string) {
   return page.getByRole("group", { name: `${name} quantity` }).locator("output");
 }
@@ -81,7 +91,7 @@ test("a manual review item changes to Reviewed once its quantity is set", async 
   await expect(page.getByText("2 items need manual review before you add them.")).toBeVisible();
 
   // Choosing another product that also can't convert returns it to manual review.
-  await cheese.getByRole("combobox").selectOption({ index: 1 });
+  await chooseOption(page, "cheese", 1);
   await expect(cheese.getByRole("note")).toContainText("Manual review. Recipe needs 3 cup, pack is 16 oz.");
   await expect(stepperValue(page, "cheese")).toHaveText("1");
   await expect(page.getByText("3 items need manual review before you add them.")).toBeVisible();
@@ -89,32 +99,32 @@ test("a manual review item changes to Reviewed once its quantity is set", async 
 
 test("the household can change any quantity, and the total follows", async ({ page }) => {
   // a-products: beef 2, tomatoes 2, cheese 1, onions 1, spice 1 = 7 × $3.49.
-  await expect(page.getByText("Estimated total: $24.43")).toBeVisible();
+  await expect(total(page)).toHaveText("Estimated total $24.43");
 
   await page.getByRole("button", { name: "Increase ground beef quantity" }).click();
   await expect(card(page, "ground beef").getByText("Changed from the suggested 2.")).toBeVisible();
-  await expect(page.getByText("Estimated total: $27.92")).toBeVisible();
+  await expect(total(page)).toHaveText("Estimated total $27.92");
 
   await page.getByRole("button", { name: "Decrease crushed tomatoes quantity" }).click();
   await expect(stepperValue(page, "crushed tomatoes")).toHaveText("1");
-  await expect(page.getByText("Estimated total: $24.43")).toBeVisible();
+  await expect(total(page)).toHaveText("Estimated total $24.43");
 
   await card(page, "ground beef").getByRole("button", { name: "Use suggestion" }).click();
   await expect(stepperValue(page, "ground beef")).toHaveText("2");
   await expect(card(page, "ground beef").getByText(/Changed from the suggested/)).toHaveCount(0);
 
   // Switching beef to the 1 lb pack resets it to that product's suggestion (4).
-  await card(page, "ground beef").getByRole("combobox").selectOption({ index: 1 });
-  await expect(card(page, "ground beef").getByText("Suggested 4 packs")).toBeVisible();
+  await chooseOption(page, "ground beef", 1);
+  await expect(card(page, "ground beef").locator("p.fit-suggested")).toHaveText("Suggested 4 packs");
   await expect(stepperValue(page, "ground beef")).toHaveText("4");
   // beef 4 × $4.19 + tomatoes 1 + cheese 1 + onions 1 + spice 1 at $3.49.
-  await expect(page.getByText("Estimated total: $30.72")).toBeVisible();
+  await expect(total(page)).toHaveText("Estimated total $30.72");
 });
 
 test("the cart receives the quantities on screen", async ({ page }) => {
   await page.getByRole("button", { name: "Increase cheese quantity" }).click();
   const cartCall = page.waitForRequest((req) => req.url().endsWith("/api/frys/cart") && req.method() === "POST");
-  await page.getByRole("button", { name: /add to fry.s/i }).click();
+  await page.getByRole("button", { name: /add \d+ items? to fry.s cart/i }).click();
   const body = (await cartCall).postDataJSON() as { items: { name: string; quantity: number }[] };
   const byName = Object.fromEntries(body.items.map((i) => [i.name, i.quantity]));
   expect(byName).toMatchObject({
