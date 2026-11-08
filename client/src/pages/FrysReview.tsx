@@ -1,15 +1,20 @@
 // ABOUTME: Review the Fry's product match for each grocery-list item — change a
-// ABOUTME: brand (which is remembered), adjust quantity, see the running total,
-// ABOUTME: then add everything to the Fry's cart.
+// ABOUTME: brand (which is remembered), adjust the suggested pack count or set a
+// ABOUTME: manual-review quantity, see the running total, then add everything to
+// ABOUTME: the Fry's cart.
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   getFrysMatch,
   saveFrysMatch,
   submitFrysCart,
+  type FittedProduct,
   type FrysCartResult,
   type FrysMatchLine,
 } from "../lib/api";
+import { Icon } from "../components/Icon";
+import { PackFitNote } from "../components/PackFitNote";
+import { QuantityStepper } from "../components/QuantityStepper";
 import { StepBar } from "../components/StepBar";
 import { formatAmounts } from "../lib/format";
 
@@ -17,9 +22,15 @@ function money(value: number): string {
   return `$${value.toFixed(2)}`;
 }
 
+function startingQuantity(product: FittedProduct): number {
+  return product.fit.status === "suggested" ? product.fit.packs : 1;
+}
+
 export function FrysReview() {
   const [lines, setLines] = useState<FrysMatchLine[] | null>(null);
   const [quantities, setQuantities] = useState<Record<string, number>>({});
+  // Manual-review items whose quantity the household has set.
+  const [reviewed, setReviewed] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<FrysCartResult | null>(null);
@@ -40,6 +51,14 @@ export function FrysReview() {
       return sum + price * (quantities[line.normalizedName] ?? line.neededQuantity);
     }, 0);
   }, [lines, quantities]);
+
+  const needsReview = useMemo(
+    () =>
+      (lines ?? []).filter(
+        (line) => line.chosen?.fit.status === "manual" && !reviewed[line.normalizedName],
+      ).length,
+    [lines, reviewed],
+  );
 
   if (error) {
     return (
@@ -71,6 +90,10 @@ export function FrysReview() {
     setLines((current) =>
       current!.map((l) => (l.normalizedName === line.normalizedName ? { ...l, chosen: product } : l)),
     );
+    // A new product has its own pack size, so the quantity starts over at its
+    // suggestion, and a product that can't convert goes back to manual review.
+    setQuantities((q) => ({ ...q, [line.normalizedName]: startingQuantity(product) }));
+    setReviewed((r) => ({ ...r, [line.normalizedName]: false }));
     try {
       await saveFrysMatch(line.normalizedName, {
         productId: product.productId,
@@ -81,6 +104,13 @@ export function FrysReview() {
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save the choice");
+    }
+  }
+
+  function setQuantity(line: FrysMatchLine, next: number) {
+    setQuantities((q) => ({ ...q, [line.normalizedName]: next }));
+    if (line.chosen?.fit.status === "manual") {
+      setReviewed((r) => ({ ...r, [line.normalizedName]: true }));
     }
   }
 
@@ -126,9 +156,22 @@ export function FrysReview() {
         </div>
       )}
 
+      {needsReview > 0 && (
+        <p className="notice review banner">
+          <Icon name="alert" size={18} />
+          {needsReview} item{needsReview === 1 ? " needs" : "s need"} manual review before you add{" "}
+          {needsReview === 1 ? "it" : "them"}.
+        </p>
+      )}
+
       <ul className="card-list">
         {lines.map((line) => (
-          <li key={line.normalizedName} className="card">
+          <li
+            key={line.normalizedName}
+            className={
+              line.chosen?.fit.status === "manual" && !reviewed[line.normalizedName] ? "card needs-review" : "card"
+            }
+          >
             <div className="toolbar">
               <strong>{line.name}</strong>
               <span className="muted">{formatAmounts(line.quantities)}</span>
@@ -152,20 +195,24 @@ export function FrysReview() {
                     ))}
                   </select>
                 </label>
-                <label className="inline-field">
-                  Quantity
-                  <input
-                    type="number"
-                    min={1}
-                    value={quantities[line.normalizedName] ?? line.neededQuantity}
-                    onChange={(e) =>
-                      setQuantities((q) => ({
-                        ...q,
-                        [line.normalizedName]: Math.max(1, Number(e.target.value) || 1),
-                      }))
+                {line.chosen && (
+                  <PackFitNote
+                    fit={line.chosen.fit}
+                    quantity={quantities[line.normalizedName] ?? line.neededQuantity}
+                    reviewed={Boolean(reviewed[line.normalizedName])}
+                    onUseSuggestion={() =>
+                      line.chosen?.fit.status === "suggested" && setQuantity(line, line.chosen.fit.packs)
                     }
                   />
-                </label>
+                )}
+                <div className="inline-field">
+                  <span>Quantity</span>
+                  <QuantityStepper
+                    label={line.name}
+                    value={quantities[line.normalizedName] ?? line.neededQuantity}
+                    onChange={(next) => setQuantity(line, next)}
+                  />
+                </div>
                 {line.remembered && <p className="muted">Remembered from a previous recipe.</p>}
               </>
             )}

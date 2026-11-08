@@ -11,15 +11,35 @@ function send(res, status, body, headers = {}) {
   res.end(payload);
 }
 
+// Pack sizes for options a and b, keyed by search-term slug, so e2e specs can
+// exercise suggested pack counts and each route to manual review. Any other
+// term gets "1 unit", which can't be read and so goes to manual review.
+const SIZES = {
+  "ground-beef": ["3 lb", "1 lb"],
+  "crushed-tomatoes": ["14.5 oz", "28 oz"],
+  cheese: ["8 oz", "16 oz"],
+  onions: ["3 lb", "2 lb"],
+  "mystery-spice": ["family size", "family size"],
+};
+
+function slug(term) {
+  return term.replace(/\W+/g, "-");
+}
+
+function sizeFor(termSlug, idSuffix) {
+  const sizes = SIZES[termSlug];
+  return sizes ? sizes[idSuffix === "b" ? 1 : 0] : "1 unit";
+}
+
 function productFor(term, idSuffix, brand, price) {
   // A term containing "fail" yields an un-addable UPC, to exercise partial failure.
-  const upc = /fail/i.test(term) ? "FAIL" : `upc-${term.replace(/\W+/g, "-")}-${idSuffix}`;
+  const upc = /fail/i.test(term) ? "FAIL" : `upc-${slug(term)}-${idSuffix}`;
   return {
-    productId: `mock-${term.replace(/\W+/g, "-")}-${idSuffix}`,
+    productId: `mock-${slug(term)}-${idSuffix}`,
     upc,
     description: `${brand} ${term}`,
     brand,
-    items: [{ price: { regular: price }, size: "1 unit" }],
+    items: [{ price: { regular: price }, size: sizeFor(slug(term), idSuffix) }],
     images: [{ sizes: [{ size: "medium", url: `http://mock/${idSuffix}.jpg` }] }],
   };
 }
@@ -60,6 +80,8 @@ const server = createServer((req, res) => {
 
   if (path.startsWith("/products/") && req.method === "GET") {
     const id = decodeURIComponent(path.slice("/products/".length));
+    // Ids look like "mock-<term slug>-<a|b>".
+    const match = id.match(/^mock-(.+)-([ab])$/);
     return send(res, 200, {
       data: [
         {
@@ -67,7 +89,7 @@ const server = createServer((req, res) => {
           upc: id.replace("mock-", "upc-"),
           description: `Saved ${id}`,
           brand: "Brand A",
-          items: [{ price: { regular: 3.49 }, size: "1 unit" }],
+          items: [{ price: { regular: 3.49 }, size: match ? sizeFor(match[1], match[2]) : "1 unit" }],
           images: [],
         },
       ],

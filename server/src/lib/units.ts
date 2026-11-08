@@ -74,6 +74,18 @@ export function unitFamily(unit: string | null): UnitFamily | null {
   return null;
 }
 
+/**
+ * Convert an amount between two units of the same measurement family. Returns
+ * null when either unit has no family or the families differ — callers decide
+ * what an unconvertible pair means, rather than this guessing.
+ */
+export function convertWithinFamily(amount: number, from: string, to: string): number | null {
+  const family = unitFamily(from);
+  if (family === null || family !== unitFamily(to)) return null;
+  const table = family === "volume" ? VOLUME_ML : MASS_G;
+  return (amount * table[from]) / table[to];
+}
+
 /** Two units combine if they are identical, or share a measurement family. */
 export function areCompatible(a: string | null, b: string | null): boolean {
   if (a === b) return true;

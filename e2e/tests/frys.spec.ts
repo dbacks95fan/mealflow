@@ -34,6 +34,8 @@ test("connect Fry's, pick a store, review matches, and add to cart with a partia
 
   // Submit to the cart — the "failitem" line has an un-addable UPC.
   await page.getByRole("button", { name: "Add to Fry’s" }).click();
-  await expect(page.getByRole("status")).toContainText(/1 item added/);
-  await expect(page.getByRole("status")).toContainText(/1 failed/);
+  // Each quantity stepper is also a status region, so pick the cart result.
+  const result = page.getByRole("status").filter({ hasText: /added to your Fry/ });
+  await expect(result).toContainText(/1 item added/);
+  await expect(result).toContainText(/1 failed/);
 });

@@ -1,6 +1,7 @@
 // ABOUTME: /api/frys — connect a Fry's (Kroger) account, pick a store, match
-// ABOUTME: grocery-list ingredients to products (remembering brand choices), and
-// ABOUTME: push the matched items to the customer's cart. No checkout.
+// ABOUTME: grocery-list ingredients to products (remembering brand choices) with
+// ABOUTME: suggested pack counts, and push the matched items to the customer's
+// ABOUTME: cart. No checkout.
 import { randomBytes } from "node:crypto";
 import { Router } from "express";
 import { z } from "zod";
@@ -14,6 +15,7 @@ import {
   getUserAccessToken,
   isFrysConnected,
 } from "../lib/frys-account.js";
+import { buildMatchLine, type FrysMatchLine } from "../lib/frys-match.js";
 import { buildGroceryList, type GroceryInput } from "../lib/grocery-list.js";
 import {
   addToCart,
@@ -202,7 +204,7 @@ krogerRouter.get("/api/frys/match", async (_req, res, next) => {
       ]),
     );
 
-    const lines = [];
+    const lines: FrysMatchLine[] = [];
     for (const line of groceryLinesForMatching()) {
       const saved = maps.get(line.normalizedName);
       let chosen: KrogerProduct | null = null;
@@ -232,16 +234,7 @@ krogerRouter.get("/api/frys/match", async (_req, res, next) => {
         chosen = options[0] ?? null;
       }
 
-      lines.push({
-        normalizedName: line.normalizedName,
-        name: line.name,
-        quantities: line.quantities,
-        neededQuantity: 1,
-        remembered: Boolean(saved),
-        chosen,
-        options,
-        unmatched: chosen == null,
-      });
+      lines.push(buildMatchLine(line, options, chosen, Boolean(saved)));
     }
 
     const total = lines.reduce(
