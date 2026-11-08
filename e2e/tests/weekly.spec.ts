@@ -14,14 +14,15 @@ test("select recipes for the week, view them, remove one, clear the rest", async
   await expect(chili.getByRole("button", { name: /In this week/ })).toBeVisible();
   await tacos.getByRole("button", { name: "Add to this week" }).click();
 
-  await page.getByRole("link", { name: "This Week" }).click();
+  await page.getByRole("navigation", { name: "Primary" }).getByRole("link", { name: "This Week" }).click();
+  // The library's week panel also lists planned recipes, and the router can
+  // change the URL before the library unmounts, so wait for This Week itself.
+  await expect(page).toHaveURL(/\/this-week$/);
+  await expect(page.getByRole("button", { name: "Clear the week" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Weekly Chili" })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Weekly Tacos" })).toBeVisible();
 
-  await page
-    .locator(".card", { hasText: "Weekly Chili" })
-    .getByRole("button", { name: "Remove" })
-    .click();
+  await page.getByRole("button", { name: "Remove Weekly Chili from this week" }).click();
   await expect(page.getByRole("heading", { name: "Weekly Chili" })).toHaveCount(0);
 
   await page.getByRole("button", { name: "Clear the week" }).click();

@@ -32,7 +32,7 @@ test.describe("navigation", () => {
   test("Add Recipe is no longer a navigation item; the library offers Add and Import", async ({ page }) => {
     await page.goto("/");
     await expect(primaryNav(page).getByRole("link", { name: "Add Recipe" })).toHaveCount(0);
-    await page.getByRole("link", { name: /add (your )?first recipe/i }).click();
+    await page.getByRole("link", { name: "Type one in" }).click();
     await expect(page).toHaveURL(/\/recipes\/new$/);
     await expect(primaryNav(page).getByRole("link", { name: "Recipes" })).toHaveClass(/active/);
     await page.goto("/");

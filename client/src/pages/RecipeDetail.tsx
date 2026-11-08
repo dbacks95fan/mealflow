@@ -2,6 +2,7 @@
 // ABOUTME: scaling, and edit / delete actions.
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { Icon } from "../components/Icon";
 import { deleteRecipe, getRecipe, type Recipe } from "../lib/api";
 import { formatIngredient } from "../lib/format";
 import { useSelections } from "../lib/useSelections";
@@ -48,10 +49,12 @@ export function RecipeDetail() {
         <div className="toolbar">
           <button
             type="button"
+            className={isSelected(recipe.id) ? "week-toggle" : "button week-toggle"}
             aria-pressed={isSelected(recipe.id)}
             onClick={() => void toggle(recipe.id)}
           >
-            {isSelected(recipe.id) ? "Remove from this week" : "Add to this week"}
+            <Icon name={isSelected(recipe.id) ? "check" : "plus"} size={18} strokeWidth={2.6} />
+            {isSelected(recipe.id) ? "In this week" : "Add to this week"}
           </button>
           <Link className="button" to={`/recipes/${recipe.id}/edit`}>
             Edit
