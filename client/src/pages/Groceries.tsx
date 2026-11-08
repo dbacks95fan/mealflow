@@ -1,6 +1,7 @@
-// ABOUTME: Combined grocery list from the week's selected recipes — grouped,
-// ABOUTME: quantities combined, with an optional "hide what I already have" view
-// ABOUTME: and a per-line pantry toggle. Review here before sending to Fry's.
+// ABOUTME: Combined grocery list from the week's selected recipes — one compact
+// ABOUTME: row per ingredient with its combined amount and recipes, a per-row
+// ABOUTME: pantry toggle, a "hide what I have" switch, and counts of what goes on
+// ABOUTME: to Fry's. Review here before sending to Fry's.
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -11,7 +12,9 @@ import {
   type GroceryList,
   type PantryItem,
 } from "../lib/api";
+import { Icon } from "../components/Icon";
 import { StepBar } from "../components/StepBar";
+import { Switch } from "../components/Switch";
 import { formatAmounts } from "../lib/format";
 
 export function Groceries() {
@@ -66,6 +69,10 @@ export function Groceries() {
   }
 
   const visible = hidePantry ? list.lines.filter((line) => !line.inPantry) : list.lines;
+  const inPantry = list.lines.filter((line) => line.inPantry).length;
+  // Fry's matching skips pantry items, so this is what the next step sends.
+  const toMatch = list.lines.length - inPantry;
+  const matchLabel = `Match ${toMatch} item${toMatch === 1 ? "" : "s"} to Fry’s`;
 
   return (
     <div className="stack">
@@ -75,42 +82,57 @@ export function Groceries() {
       </p>
       <StepBar current={2} />
 
-      <label className="inline-field">
-        <input
-          type="checkbox"
-          checked={hidePantry}
-          onChange={(e) => setHidePantry(e.target.checked)}
-        />
-        Hide items I already have
-      </label>
+      <div className="grocery-summary">
+        <p>
+          <strong>
+            {list.lines.length} item{list.lines.length === 1 ? "" : "s"}
+          </strong>{" "}
+          · {inPantry} in pantry
+        </p>
+        <Switch label="Hide what I have" checked={hidePantry} onChange={setHidePantry} />
+      </div>
 
-      <ul className="card-list">
-        {visible.map((line) => (
-          <li key={line.normalizedName} className={line.inPantry ? "card muted-card" : "card"}>
-            <div className="toolbar">
-              <strong>{line.name}</strong>
-              <span>{formatAmounts(line.quantities)}</span>
+      {visible.length > 0 && (
+        <ul className="card grocery-list">
+          {visible.map((line) => (
+            <li key={line.normalizedName} className={line.inPantry ? "grocery-row in-pantry" : "grocery-row"}>
+              <div className="grocery-text">
+                <span className="grocery-line">
+                  <strong>{line.name}</strong>
+                  <span className="grocery-amount">{formatAmounts(line.quantities)}</span>
+                </span>
+                <span className="muted">
+                  From {Array.from(new Set(line.contributions.map((c) => c.recipeName))).join(", ")}
+                </span>
+              </div>
               <button
                 type="button"
+                className="pantry-button"
                 aria-pressed={line.inPantry}
+                aria-label={`Have it: ${line.name}`}
                 onClick={() => void togglePantry(line.normalizedName, line.name)}
               >
-                {line.inPantry ? "Already have ✓" : "I already have this"}
+                {line.inPantry && <Icon name="check" size={16} strokeWidth={2.6} />}
+                {line.inPantry ? "Have it" : "Have it?"}
               </button>
-            </div>
-            <p className="muted">
-              from {Array.from(new Set(line.contributions.map((c) => c.recipeName))).join(", ")}
-            </p>
-          </li>
-        ))}
-      </ul>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {visible.length === 0 && <p>Everything on the list is in your pantry.</p>}
 
       <div className="action-bar">
-        <Link className="button" to="/frys">
-          Match to Fry’s products
-        </Link>
+        {toMatch > 0 ? (
+          <Link className="button" to="/frys">
+            {matchLabel}
+          </Link>
+        ) : (
+          <button type="button" className="button" disabled>
+            {matchLabel}
+          </button>
+        )}
+        <p className="muted action-note">Items you already have are skipped.</p>
       </div>
     </div>
   );

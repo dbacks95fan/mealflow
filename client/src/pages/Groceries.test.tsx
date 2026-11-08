@@ -1,4 +1,5 @@
-// ABOUTME: Groceries — combined amounts, pantry flag, and the hide-pantry view.
+// ABOUTME: Groceries — combined amounts, pantry flag, the hide-pantry view, and
+// ABOUTME: the summary and match counts.
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
@@ -53,7 +54,7 @@ describe("Groceries", () => {
     render_();
     expect(await screen.findByText("flour")).toBeInTheDocument();
     expect(screen.getByText("3 cup")).toBeInTheDocument();
-    expect(screen.getByText(/from Bread/)).toBeInTheDocument();
+    expect(screen.getByText("From Bread")).toBeInTheDocument();
   });
 
   it("hides pantry items when the toggle is on", async () => {
@@ -65,7 +66,7 @@ describe("Groceries", () => {
     render_();
 
     expect(await screen.findByText("salt")).toBeInTheDocument();
-    await user.click(screen.getByLabelText(/hide items i already have/i));
+    await user.click(screen.getByRole("switch", { name: "Hide what I have" }));
     expect(screen.queryByText("salt")).not.toBeInTheDocument();
     expect(screen.getByText("flour")).toBeInTheDocument();
   });
@@ -76,7 +77,54 @@ describe("Groceries", () => {
     const user = userEvent.setup();
     render_();
 
-    await user.click(await screen.findByRole("button", { name: /i already have this/i }));
+    await user.click(await screen.findByRole("button", { name: "Have it: flour", pressed: false }));
     expect(addPantryItem).toHaveBeenCalledWith("flour");
+  });
+
+  it("takes a line back out of the pantry", async () => {
+    getGroceryList.mockResolvedValue({ lines: [line({ inPantry: true })], recipeCount: 1 });
+    listPantry.mockResolvedValue([{ id: 9, name: "flour", normalizedName: "flour", createdAt: "" }]);
+    removePantryItem.mockResolvedValue([]);
+    const user = userEvent.setup();
+    render_();
+
+    const button = await screen.findByRole("button", { name: "Have it: flour", pressed: true });
+    expect(button).toHaveTextContent("Have it");
+    await user.click(button);
+    expect(removePantryItem).toHaveBeenCalledWith(9);
+  });
+
+  it("shows how many items are listed and in the pantry, and how many go to Fry's", async () => {
+    getGroceryList.mockResolvedValue({
+      lines: [
+        line(),
+        line({ name: "sugar", normalizedName: "sugar" }),
+        line({ name: "salt", normalizedName: "salt", inPantry: true }),
+      ],
+      recipeCount: 2,
+    });
+    render_();
+    expect(await screen.findByText("3 items")).toBeInTheDocument();
+    expect(screen.getByText("3 items").closest("p")).toHaveTextContent("3 items · 1 in pantry");
+    expect(screen.getByRole("link", { name: "Match 2 items to Fry’s" })).toHaveAttribute("href", "/frys");
+    expect(screen.getByText("Items you already have are skipped.")).toBeInTheDocument();
+  });
+
+  it("dims pantry rows and marks the toggle as pressed", async () => {
+    getGroceryList.mockResolvedValue({
+      lines: [line(), line({ name: "salt", normalizedName: "salt", inPantry: true })],
+      recipeCount: 1,
+    });
+    render_();
+    const salt = await screen.findByRole("button", { name: "Have it: salt" });
+    expect(salt).toHaveAttribute("aria-pressed", "true");
+    expect(salt.closest("li")).toHaveClass("in-pantry");
+    expect(screen.getByRole("button", { name: "Have it: flour" }).closest("li")).not.toHaveClass("in-pantry");
+  });
+
+  it("disables matching when everything is in the pantry", async () => {
+    getGroceryList.mockResolvedValue({ lines: [line({ inPantry: true })], recipeCount: 1 });
+    render_();
+    expect(await screen.findByRole("button", { name: "Match 0 items to Fry’s" })).toBeDisabled();
   });
 });
