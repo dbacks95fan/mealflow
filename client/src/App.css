@@ -2,52 +2,298 @@
    index.css (INT-MF-0002). Each interactive component defines default, hover,
    focus (global :focus-visible), selected, and disabled states. */
 
+/* App shell (INT-MF-0003). Phones get a fixed bottom tab bar; from
+   --wide (768px) up the same nav becomes a pill bar in the header. */
 .app-shell {
+  --mf-tabbar-h: 64px;
   max-width: 760px;
   margin: 0 auto;
-  padding: var(--mf-space-5) var(--mf-space-4) 3rem;
+  padding: var(--mf-space-5) var(--mf-space-4)
+    calc(var(--mf-tabbar-h) + env(safe-area-inset-bottom, 0px) + var(--mf-space-6));
 }
 
-.app-shell > header {
+.app-header {
   display: flex;
   flex-direction: column;
   gap: var(--mf-space-3);
-  margin-bottom: var(--mf-space-6);
+  margin-bottom: var(--mf-space-5);
 }
 
-.app-shell > header h1 {
+.app-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mf-space-3);
+}
+
+.app-title h1 {
   color: var(--mf-primary-text);
 }
 
-/* Navigation */
+.household-name {
+  color: var(--mf-muted);
+  font-size: var(--mf-text-sm);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Navigation: phone tab bar */
 .nav-bar {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--mf-space-1);
-  border-bottom: 3px solid var(--mf-sand);
-  padding-bottom: var(--mf-space-2);
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  min-height: var(--mf-tabbar-h);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--mf-surface);
+  border-top: 1px solid var(--mf-border);
 }
 
 .nav-link {
-  display: inline-flex;
+  position: relative;
+  display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  gap: var(--mf-space-1);
   min-height: var(--mf-touch);
+  min-width: 0;
   text-decoration: none;
   color: var(--mf-muted);
-  padding: 0.35rem 0.6rem;
-  border-radius: var(--mf-radius-sm);
+  font-size: var(--mf-text-xs);
   font-weight: 600;
+  white-space: nowrap;
 }
 
 .nav-link:hover {
   color: var(--mf-text);
+}
+
+.nav-link.active {
+  color: var(--mf-primary-text);
+  font-weight: 700;
+}
+
+/* Short red bar above the active tab */
+.nav-link.active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 36px;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--mf-primary-text);
+}
+
+.nav-icon {
+  position: relative;
+  display: inline-flex;
+}
+
+.nav-badge {
+  position: absolute;
+  top: -6px;
+  right: -12px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: var(--mf-radius-pill);
+  background: var(--mf-primary);
+  color: var(--mf-on-primary);
+  font-size: var(--mf-text-xs);
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+}
+
+/* Navigation: wide-screen pill bar */
+@media (min-width: 768px) {
+  .app-shell {
+    padding-bottom: 3rem;
+  }
+
+  /* Wordmark, then the section pills, then the household name. */
+  .app-header {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--mf-space-4);
+  }
+
+  .app-title {
+    display: contents;
+  }
+
+  .household-name {
+    order: 2;
+    margin-left: auto;
+  }
+
+  .nav-bar {
+    order: 1;
+    position: static;
+    display: flex;
+    gap: var(--mf-space-1);
+    min-height: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+  }
+
+  .nav-link {
+    flex-direction: row;
+    gap: var(--mf-space-2);
+    padding: 0.35rem 0.9rem;
+    border-radius: var(--mf-radius-pill);
+    font-size: var(--mf-text-sm);
+  }
+
+  .nav-link .icon {
+    display: none;
+  }
+
+  .nav-link:hover {
+    background: var(--mf-surface-2);
+  }
+
+  .nav-link.active {
+    color: var(--mf-on-primary);
+    background: var(--mf-primary);
+  }
+
+  .nav-link.active::before {
+    display: none;
+  }
+
+  /* With the icon hidden the badge sits after the label as an inline pill. */
+  .nav-icon {
+    order: 1;
+  }
+
+  .nav-badge {
+    position: static;
+  }
+
+  .nav-link.active .nav-badge {
+    background: var(--mf-on-primary);
+    color: var(--mf-primary);
+  }
+}
+
+/* Shopping step bar (components/StepBar.tsx) */
+.step-bar {
+  list-style: none;
+  margin: 0;
+  padding: var(--mf-space-1);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--mf-space-1);
+  background: var(--mf-surface);
+  border: 1px solid var(--mf-border);
+  border-radius: var(--mf-radius-lg);
+}
+
+.step-bar li {
+  display: flex;
+}
+
+.step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--mf-space-2);
+  min-height: var(--mf-touch);
+  border-radius: var(--mf-radius);
+  color: var(--mf-muted);
+  font-size: var(--mf-text-sm);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.step:hover {
   background: var(--mf-surface-2);
 }
 
-.nav-link.active,
-.nav-link[aria-current="page"] {
-  color: var(--mf-on-primary);
+.step.done {
+  color: var(--mf-accent);
+}
+
+.step.current,
+.step.current:hover {
   background: var(--mf-primary);
+  color: var(--mf-on-primary);
+}
+
+.step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  font-size: var(--mf-text-xs);
+}
+
+.step.current .step-num {
+  border-color: var(--mf-on-primary);
+  background: var(--mf-on-primary);
+  color: var(--mf-primary);
+}
+
+/* Sticky primary action. On phones it stays pinned just above the tab bar. */
+.action-bar {
+  position: sticky;
+  bottom: calc(var(--mf-tabbar-h) + env(safe-area-inset-bottom, 0px));
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-2);
+  margin: 0 calc(-1 * var(--mf-space-4));
+  padding: var(--mf-space-3) var(--mf-space-4);
+  background: var(--mf-bg);
+  border-top: 1px solid var(--mf-border);
+}
+
+.action-bar > .button,
+.action-bar > button {
+  width: 100%;
+  min-height: 52px;
+  font-size: var(--mf-text-md);
+}
+
+@media (min-width: 768px) {
+  .action-bar {
+    position: static;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+  }
+
+  .action-bar > .button,
+  .action-bar > button {
+    width: auto;
+    align-self: flex-start;
+  }
 }
 
 /* Layout helpers */

@@ -45,11 +45,15 @@ export function RecipeForm() {
   const [rows, setRows] = useState<Row[]>(() => (draft ? draftToRows(draft) : [{ ...blankRow }]));
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  // When editing, the form waits for the saved recipe so typing can't be
+  // overwritten by a load that finishes late.
+  const [loaded, setLoaded] = useState(!editing);
 
   useEffect(() => {
     if (!editing) return;
     getRecipe(Number(id))
       .then((r) => {
+        setLoaded(true);
         setName(r.name);
         setServings(r.servings != null ? String(r.servings) : "");
         setTags(r.tags.join(", "));
@@ -125,6 +129,8 @@ export function RecipeForm() {
       setSubmitting(false);
     }
   }
+
+  if (!loaded) return error ? <p role="alert">{error}</p> : <p>Loading recipe…</p>;
 
   return (
     <form onSubmit={handleSubmit} className="stack">

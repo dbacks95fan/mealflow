@@ -1,7 +1,7 @@
 // ABOUTME: Builds the Express app — security middleware, JSON API routers, and
 // ABOUTME: the built SPA with a history-fallback for client-side routing.
 import cors from "cors";
-import { rateLimit } from "express-rate-limit";
+import { MemoryStore, rateLimit } from "express-rate-limit";
 import express from "express";
 import helmet from "helmet";
 import { existsSync } from "node:fs";
@@ -21,7 +21,7 @@ import { pantryRouter } from "./routes/pantry.js";
 import { preferencesRouter } from "./routes/preferences.js";
 import { recipesRouter } from "./routes/recipes.js";
 import { selectionsRouter } from "./routes/selections.js";
-import { testSupportEnabled, testSupportRouter } from "./routes/test-support.js";
+import { createTestSupportRouter, testSupportEnabled } from "./routes/test-support.js";
 
 const currentDir = dirname(fileURLToPath(import.meta.url));
 const clientDist = join(currentDir, "..", "..", "client", "dist");
@@ -57,6 +57,7 @@ export function createApp() {
     app.use(pinoHttp({ logger }));
   }
 
+  const rateLimitStore = new MemoryStore();
   app.use(
     "/api",
     rateLimit({
@@ -64,6 +65,7 @@ export function createApp() {
       limit: 600, // generous for a household; blocks runaway loops / abuse
       standardHeaders: true,
       legacyHeaders: false,
+      store: rateLimitStore,
     }),
   );
 
@@ -77,7 +79,7 @@ export function createApp() {
   app.use(importRouter);
   app.use(krogerRouter);
   if (testSupportEnabled) {
-    app.use(testSupportRouter);
+    app.use(createTestSupportRouter(rateLimitStore));
   }
 
   app.use("/api", notFoundHandler);

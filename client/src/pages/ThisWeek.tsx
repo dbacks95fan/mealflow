@@ -2,6 +2,7 @@
 // ABOUTME: the whole list.
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { StepBar } from "../components/StepBar";
 import { useSelections } from "../lib/useSelections";
 
 export function ThisWeek() {
@@ -13,11 +14,15 @@ export function ThisWeek() {
 
   if (selections.length === 0) {
     return (
-      <div className="empty-state">
-        <p>No recipes selected yet.</p>
-        <p className="muted">
-          Open a recipe in the <Link to="/">library</Link> and choose “Add to this week”.
-        </p>
+      <div className="stack">
+        <h2>This week</h2>
+        <StepBar current={1} />
+        <div className="empty-state">
+          <p>No recipes selected yet.</p>
+          <p className="muted">
+            Open a recipe in the <Link to="/">library</Link> and choose “Add to this week”.
+          </p>
+        </div>
       </div>
     );
   }
@@ -50,6 +55,8 @@ export function ThisWeek() {
         )}
       </div>
 
+      <StepBar current={1} />
+
       <ul className="card-list">
         {selections.map((selection) => (
           <li key={selection.recipeId} className="card">
@@ -69,11 +76,11 @@ export function ThisWeek() {
         ))}
       </ul>
 
-      <p>
+      <div className="action-bar">
         <Link className="button" to="/groceries">
           Build the grocery list
         </Link>
-      </p>
+      </div>
     </div>
   );
 }

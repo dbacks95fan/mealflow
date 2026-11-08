@@ -1,5 +1,8 @@
-// ABOUTME: Hook over /api/selections — the shared "this week" recipe list.
-import { useCallback, useEffect, useState } from "react";
+// ABOUTME: Hook over /api/selections — the shared "this week" recipe list. Inside
+// ABOUTME: a SelectionsProvider (components/) every caller shares one list, so the
+// ABOUTME: navigation badge and the pages stay in step; outside one, the hook
+// ABOUTME: keeps its own.
+import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import {
   addSelection,
   clearSelections,
@@ -8,17 +11,26 @@ import {
   type Selection,
 } from "./api";
 
-export function useSelections() {
+export interface SelectionsState {
+  selections: Selection[] | null;
+  isSelected: (recipeId: number) => boolean;
+  toggle: (recipeId: number) => Promise<void>;
+  clear: () => Promise<void>;
+  error: string | null;
+}
+
+export const SelectionsContext = createContext<SelectionsState | null>(null);
+
+export function useSelectionsState(enabled: boolean): SelectionsState {
   const [selections, setSelections] = useState<Selection[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const refresh = useCallback(() => {
+  useEffect(() => {
+    if (!enabled) return;
     listSelections()
       .then(setSelections)
       .catch((err: Error) => setError(err.message));
-  }, []);
-
-  useEffect(refresh, [refresh]);
+  }, [enabled]);
 
   const isSelected = useCallback(
     (recipeId: number) => Boolean(selections?.some((s) => s.recipeId === recipeId)),
@@ -49,4 +61,12 @@ export function useSelections() {
   }, []);
 
   return { selections, isSelected, toggle, clear, error };
+}
+
+export function useSelections(): SelectionsState {
+  const shared = useContext(SelectionsContext);
+  // Hooks can't be called conditionally, so the local state always exists but
+  // only fetches when there is no provider to share.
+  const local = useSelectionsState(shared === null);
+  return shared ?? local;
 }

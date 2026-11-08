@@ -11,6 +11,7 @@ import {
   type GroceryList,
   type PantryItem,
 } from "../lib/api";
+import { StepBar } from "../components/StepBar";
 import { formatAmounts } from "../lib/format";
 
 export function Groceries() {
@@ -51,11 +52,15 @@ export function Groceries() {
 
   if (list.recipeCount === 0) {
     return (
-      <div className="empty-state">
-        <p>No recipes selected for the week yet.</p>
-        <p className="muted">
-          Add recipes to <Link to="/this-week">This Week</Link> to build a combined list.
-        </p>
+      <div className="stack">
+        <h2>Grocery list</h2>
+        <StepBar current={2} />
+        <div className="empty-state">
+          <p>No recipes selected for the week yet.</p>
+          <p className="muted">
+            Add recipes to <Link to="/this-week">This Week</Link> to build a combined list.
+          </p>
+        </div>
       </div>
     );
   }
@@ -68,6 +73,7 @@ export function Groceries() {
       <p className="muted">
         From {list.recipeCount} recipe{list.recipeCount === 1 ? "" : "s"}. Review before sending to Fry’s.
       </p>
+      <StepBar current={2} />
 
       <label className="inline-field">
         <input
@@ -101,11 +107,11 @@ export function Groceries() {
 
       {visible.length === 0 && <p>Everything on the list is in your pantry.</p>}
 
-      <p>
+      <div className="action-bar">
         <Link className="button" to="/frys">
           Match to Fry’s products
         </Link>
-      </p>
+      </div>
     </div>
   );
 }

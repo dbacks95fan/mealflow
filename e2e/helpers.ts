@@ -33,3 +33,14 @@ export async function createRecipe(
     await page.getByRole("button", { name: "Add to this week" }).click();
   }
 }
+
+/** Connect the mock Fry's account and choose its first store as home. */
+export async function connectFrys(page: Page): Promise<void> {
+  await page.goto("/settings");
+  await page.getByRole("button", { name: "Connect Fry’s" }).click();
+  await expect(page).toHaveURL(/\/settings\?frys=connected$/);
+  await page.getByLabel("ZIP code").fill("85001");
+  await page.getByRole("button", { name: "Find stores" }).click();
+  await page.getByRole("button", { name: "Use this store" }).click();
+  await expect(page.getByRole("button", { name: "Home store ✓" })).toBeVisible();
+}
