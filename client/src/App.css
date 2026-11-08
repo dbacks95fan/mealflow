@@ -725,6 +725,83 @@ button.change-product {
   font-size: var(--mf-text-lg);
 }
 
+/* Cart result (components/CartResult.tsx, INT-MF-0006) */
+.cart-result-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-2);
+}
+
+.cart-result-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--mf-error-bg);
+  color: var(--mf-primary-text);
+}
+
+.cart-result-head h2 {
+  font-size: var(--mf-text-2xl);
+}
+
+.notice-title {
+  display: flex;
+  align-items: center;
+  gap: var(--mf-space-2);
+  font-weight: 700;
+}
+
+.notice.warn .notice-title {
+  color: var(--mf-error-text);
+}
+
+.plain-list {
+  list-style: none;
+  margin: var(--mf-space-2) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mf-space-1);
+}
+
+.added-items {
+  padding: 0;
+  overflow: hidden;
+}
+
+.added-items .plain-list {
+  margin: 0;
+  padding: 0 var(--mf-space-4) var(--mf-space-4);
+}
+
+button.disclosure {
+  width: 100%;
+  min-height: 52px;
+  justify-content: space-between;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.added-item {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--mf-space-3);
+}
+
+.button-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--mf-space-3);
+}
+
+.button-row > * {
+  min-height: 52px;
+}
+
 /* A text-styled button, for secondary actions inside a sentence. */
 button.link-button {
   min-width: 0;
